@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Fisher</string>
+    <string name="relationship">关系</string>
+    <string name="name">名字</string>
+    <string name="parent">前代</string>
+    <string name="child">后代</string>
+    <string name="need">所需</string>
+    <string name="has_already">已有</string>
+    <string name="can_mutation">可变异</string>
+    <string name="commit">提交</string>
+</resources>
