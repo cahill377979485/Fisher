@@ -8,4 +8,13 @@
     <dimen name="text_size">18sp</dimen>
     <dimen name="btn_width">180sp</dimen>
     <dimen name="btn_height">36sp</dimen>
+    <dimen name="b20">10dp</dimen>
+    <dimen name="b22">11dp</dimen>
+    <dimen name="b25">12.5dp</dimen>
+    <dimen name="b34">17dp</dimen>
+    <dimen name="b40">20dp</dimen>
+    <dimen name="b50">25dp</dimen>
+    <dimen name="b60">30dp</dimen>
+    <dimen name="b79">39.5dp</dimen>
+    <dimen name="b180">90dp</dimen>
 </resources>

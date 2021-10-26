@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+
 import com.cahill.fisher.R;
 import com.cahill.fisher.base.BaseSecondActivity;
 import com.cahill.fisher.bean.Fish;
 import com.cahill.fisher.databinding.ActivityRelationshipBinding;
+import com.cahill.fisher.ui.binder.FishBinder;
 import com.cahill.fisher.util.Checker;
 import com.cahill.fisher.util.DataUtil;
 
@@ -35,31 +38,26 @@ public class RelationshipActivity extends BaseSecondActivity {
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        adapter = new MultiTypeAdapter();
-//        adapter.register();
         binding = ActivityRelationshipBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
         setTitle(R.string.relationship);
         setMore(v -> {
         });
-
-        if (Checker.noList(DataUtil.getAllFish())) {
-            List<Fish> list = new ArrayList<>();
-            Fish cake = new Fish("蛋糕鱼", null, "蛋糕石", 800, 1038, false);
-            DataUtil.saveFish(cake);
-            Fish bear = new Fish("比熊", null, "比熊石", 800, 705, false);
-            DataUtil.saveFish(bear);
-            Fish puff = new Fish("泡芙", null, "泡芙石", 800, 1929, false);
-            DataUtil.saveFish(puff);
-            list.add(cake);
-            list.add(bear);
-            list.add(puff);
-            Fish aquarius = new Fish("水瓶座", list, "水瓶石", 0, 252, false);
-            DataUtil.saveFish(aquarius);
-        }
-
-        Fish aquarius = DataUtil.getFish("水瓶座");
-        binding.fv.setFish(aquarius);
-
+        adapter = new MultiTypeAdapter(items);
+        adapter.register(Fish.class, new FishBinder());
+        binding.rv.setLayoutManager(new GridLayoutManager(this, 1));
+        binding.rv.setHasFixedSize(true);
+        binding.rv.setAdapter(adapter);
+//        if (Checker.noList(DataUtil.getAllFish())) {
+            DataUtil.initAllFish();
+//        }
+        List<Fish> list = new ArrayList<>();
+        list.add(DataUtil.getFish("白羊座"));
+        list.add(DataUtil.getFish("狮子座"));
+        list.add(DataUtil.getFish("天蝎座"));
+        list.add(DataUtil.getFish("巨蟹座"));
+        list.add(DataUtil.getFish("水瓶座"));
+        items.addAll(list);
+        adapter.notifyDataSetChanged();
     }
 }

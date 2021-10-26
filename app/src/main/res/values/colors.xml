@@ -8,4 +8,146 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black_333">#33333333</color>
+
+    <color name="transparentColorAccent">#721fb3a5</color>
+    <color name="cyan">#4cb050</color>
+    <color name="gray">#FF888888</color>
+    <color name="divider">#ffd2d2d2</color>
+    <color name="gray1">#ebebeb</color>
+    <color name="line">#d7d7d7</color>
+    <color name="orange">#f4bc21</color>
+    <color name="orange2">#ffdd1c</color>
+    <color name="red">#e43f24</color>
+    <color name="red2">#fc5f60</color>
+    <color name="blue">#068dda</color>
+    <color name="color_blue_95BBD1">#95BBD1</color>
+    <color name="dark">#803cbcb7</color>
+    <color name="light">#800de6e8</color>
+    <color name="color_green_42D1CB">#42D1CB</color>
+
+    <color name="color_green_main">#4eafa6</color>
+    <color name="color_green_4cb">#42ceb7</color>
+    <color name="color_green_10a59b">#10a59b</color>
+
+    <color name="color_orange_main">#FF791B</color>
+    <color name="color_orange_gray_fdf4ef">#fdf4ef</color>
+    <color name="color_orange_gray">#FFF7F2</color>
+    <color name="color_orange_f71">#ff7a1f</color>
+    <color name="color_orange_ff7a6d">#ff7a6d</color>
+    <color name="color_red_ff">#ff0000</color>
+    <color name="color_red_fcc">#FFC4C0</color>
+    <color name="color_red_d23">#d12f31</color>
+    <color name="color_red_d10">#d81e06</color>
+    <color name="color_red_c10">#c71001</color>
+    <color name="color_red_ffe6e6">#ffe6e6</color>
+    <color name="color_red_fbe">#fbeabb</color>
+    <color name="color_pink_fd8">#FFD28C</color>
+    <color name="color_pink_feb">#FBE7B2</color>
+    <color name="color_pink">#FFF7F2</color>
+    <color name="color_pink_fee">#FDEEE3</color>
+
+    <color name="color_gray_c0">#c0c0c0</color>
+    <color name="color_gray_F5F5F5">#F5F5F5</color>
+    <color name="color_gray_e8">#e8e8e8</color>
+    <color name="color_gray_666">#666</color>
+    <color name="color_gray_90333">#90333333</color>
+    <color name="color_gray_999">#999</color>
+    <color name="color_gray_f9">#f9f9f9</color>
+    <color name="color_gray_f4">#f4f4f4</color>
+    <color name="color_gray_AAA">#A4A4A4</color>
+    <color name="color_gray_f0">#f9f9f9</color>
+    <color name="color_gray_88">#888</color>
+    <color name="color_gray_747">#747474</color>
+
+    <color name="color_black">#000</color>
+    <color name="color_black_33">#333333</color>
+    <color name="color_black_alpha40">#66000000</color>
+
+    <color name="color_white">#ffffff</color>
+    <color name="color_white_alpha">#f0ffffff</color>
+    <color name="color_white_alpha_44">#80ffffff</color>
+    <color name="color_red">#d81e06</color>
+    <color name="color_red_temperature">#FB6F6C</color>
+    <color name="color_pink_blood_pressure">#FF85AF</color>
+    <color name="color_yellow">#FAE678</color>
+    <color name="color_yellow_FFA800">#FFA800</color>
+    <color name="color_yellow_F8BC72">#F8BC72</color>
+    <color name="color_yellow_ffd">#FAF6D0</color>
+    <color name="color_yellow_fff9e6">#fff9e6</color>
+
+    <color name="bottom_color">#f5f5f5</color>
+    <color name="color_green">#4eafa6</color>
+
+    <color name="color_green_2ccac4">#2ccac4</color>
+    <color name="color_yellow_f8b62c">#f8b62c</color>
+    <color name="color_yellow_fba646">#fba646</color>
+    <color name="color_red_ff3c30">#ff3c30</color>
+
+    <!-- 用于弱化标题，辅助，次要的文字信息，常用于重要文字搭配 -->
+    <color name="button_text_color">#999999</color>
+    <color name="text_color1">#575757</color>
+
+    <color name="color_blue_38f">#3285fe</color>
+
+    <color name="color_line">@color/color_gray_e8</color>
+    <color name="color_light_green">#06C25F</color>
+    <color name="color_black_alpha25">#40000000</color>
+    <color name="color_orange_fa7">#f8aa73</color>
+    <color name="color_orange_fda">#FDD3A1</color>
+    <color name="color_orange_f82">#ff852f</color>
+    <color name="color_orange_f94">#FF9348</color>
+    <color name="color_orange_fe9">#ffe292</color>
+    <color name="color_silver_crown">#D6E5F2</color>
+    <color name="color_copper_crown">#E2D2BA</color>
+    <color name="color_godden_crown">#FED530</color>
+
+    <color name="color_black_alpha">#0c000000</color>
+    <color name="color_blue_9df">#95d4ff</color>
+
+    <!--    透明-->
+    <color name="color_transparent">#00323232</color>
+    <color name="color_transparent_bb">#44000000</color>
+    <color name="color_transparent_88">#88000000</color>
+    <color name="color_blue_09f">#0099ff</color>
+    <color name="color_blue_3954ff">#3954ff</color>
+
+    <color name="color_temperature_35">#3285fe</color>
+    <color name="color_temperature_35_37">#4eafa6</color>
+    <color name="color_temperature_37_38">#FED530</color>
+    <color name="color_temperature_38_5">#F66A5C</color>
+    <color name="color_blood_pressure_F99">#FF9999</color>
+
+    <color name="color_temperature_bg_35">#87CEFA</color>
+    <color name="color_temperature_bg_35_37">#AFEEEE</color>
+    <color name="color_temperature_bg_37_38">#FAFAD2</color>
+    <color name="color_temperature_bg_38_5">#FDE1DE</color>
+
+    <color name="color_E5FFFF">#E5FFFF</color>
+    <color name="color_ECF7FF">#ECF7FF</color>
+    <color name="color_FFF7F9">#FFF7F9</color>
+    <color name="color_FFF5E9">#FFF5E9</color>
+    <color name="color_blue_43adfb">#43adfb</color>
+    <color name="color_7E8BD1">#7E8BD1</color>
+    <color name="color_purple_8419E6">#8419E6</color>
+    <color name="color_EDEFF8">#EDEFF8</color>
+    <color name="color_E53030">#E53030</color>
+    <color name="color_B9DDDD">#B9DDDD</color>
+    <color name="color_purple_eb13fb">#eb13fb</color>
+
+    <color name="color_f6f5f8">#f6f5f8</color>
+    <color name="color_f8b62c">#f8b62c</color>
+    <color name="color_43ADFB">#43ADFB</color>
+    <color name="color_F8B62C">#F8B62C</color>
+    <color name="color_6D7A8A">#6D7A8A</color>
+    <color name="color_10A59B">#10A59B</color>
+    <color name="color_FF3C30">#FF3C30</color>
+    <color name="color_009cee">#009cee</color>
+    <color name="color_fdfced">#fdfced</color>
+    <color name="color_e26022">#e26022</color>
+    <color name="color_fef3db">#fef3db</color>
+    <color name="color_gray_999999">#999999</color>
+    <color name="color_f4f4f4">#f4f4f4</color>
+    <color name="color_e8e8e8">#e8e8e8</color>
+    <color name="color_ef4e55">#ef4e55</color>
+    <color name="color_gray_ddd">#dddddd</color>
 </resources>

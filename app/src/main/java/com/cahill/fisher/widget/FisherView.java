@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import android.graphics.Shader;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.ColorInt;
@@ -48,6 +49,7 @@ public class FisherView extends View {
     private LinearGradient linearGradient, linearGradientChild;
 
     private Fish fish;
+    private boolean editMode;
     private boolean showHelper;
 
     public FisherView(Context context) {
@@ -103,38 +105,68 @@ public class FisherView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (Checker.isNull(fish)) return;
-        //
+        //画名称
         String name = fish.getName();
         textPaint.measureText(name);
         textPaint.getTextBounds(name, 0, name.length(), rect);
         //渐变色
         paint.setShader(getLinearGradient());
-        float startX = getWidth() / 4f + rect.width() / 2f + ROUND_RADIUS;
+        float startX = getWidth() / 6f + rect.width() / 2f + ROUND_RADIUS;
         float startY = getHeight() / 2f;
-        canvas.drawRoundRect(getWidth() / 4f - rect.width() / 2f - ROUND_RADIUS, getHeight() / 2f - ITEM_HEIGHT / 2f, startX, getHeight() / 2f + ITEM_HEIGHT / 2f, ROUND_RADIUS, ROUND_RADIUS, paint);
-        canvas.drawText(name, getWidth() / 4f - rect.width() / 2f, getHeight() / 2f - (rect.bottom + rect.top) / 2f, textPaint);
+        canvas.drawRoundRect(getWidth() / 6f - rect.width() / 2f - ROUND_RADIUS, getHeight() / 2f - ITEM_HEIGHT / 2f, startX, getHeight() / 2f + ITEM_HEIGHT / 2f, ROUND_RADIUS, ROUND_RADIUS, paint);
+        canvas.drawText(name, getWidth() / 6f - rect.width() / 2f, getHeight() / 2f - (rect.bottom + rect.top) / 2f, textPaint);
         //
-        List<Fish> list = fish.getProducer();
-        if (Checker.hasList(list)) {
-            float itemHeight = getHeight() / (float) list.size();
-            for (int i = 0; i < list.size(); i++) {
-                if(showHelper) {
-                    canvas.drawLine(0, itemHeight * (i + 1), getWidth(), itemHeight * (i + 1), textPaint);
-                    canvas.drawLine(0, itemHeight * (i + 1) - itemHeight / 2f, getWidth(), itemHeight * (i + 1) - itemHeight / 2f, textPaint);
+        List<Fish> listParent = fish.getProducer();
+        if (Checker.hasList(listParent)) {
+            float itemHeight = getHeight() / (float) listParent.size();
+            for (int i = 0; i < listParent.size(); i++) {
+                if (showHelper) {
+                    canvas.drawLine(0, itemHeight * (i + 1), getWidth() * 2 / 3f, itemHeight * (i + 1), textPaint);
+                    canvas.drawLine(0, itemHeight * (i + 1) - itemHeight / 2f, getWidth() * 2 / 3f, itemHeight * (i + 1) - itemHeight / 2f, textPaint);
                 }
-                Fish f = list.get(i);
-                String n = f.getName();
-                textPaint.getTextBounds(n, 0, n.length(), rect);
-                float endX = getWidth() * 3 / 4f - rect.width() / 2f - ROUND_RADIUS;
-                float endY = itemHeight * (i + 0.5f);
+                Fish fishParent = listParent.get(i);
+                String nameParent = fishParent.getName();
+                textPaint.getTextBounds(nameParent, 0, nameParent.length(), rect);
+                float endXParent = getWidth() / 2f - rect.width() / 2f - ROUND_RADIUS;
+                float endYParent = itemHeight * (i + 0.5f);
+                float startX2 = getWidth() / 2f + rect.width() / 2f + ROUND_RADIUS;
                 path.reset();
                 path.moveTo(startX, startY);
-                path.quadTo(startX, endY, endX, endY);
+                path.quadTo(startX, endYParent, endXParent, endYParent);
                 canvas.drawPath(path, paintLine);
                 paint.setShader(getLinearGradient());
-                canvas.drawRoundRect(endX, itemHeight * (i + 0.5f) - ITEM_HEIGHT / 2f, getWidth() * 3 / 4f + rect.width() / 2f + ROUND_RADIUS, itemHeight * (i + 0.5f) + ITEM_HEIGHT / 2f, ROUND_RADIUS, ROUND_RADIUS, paint);
-                canvas.drawText(n, getWidth() * 3 / 4f - rect.width() / 2f, itemHeight * (i + 0.5f) - (rect.bottom + rect.top) / 2f, textPaint);
+                canvas.drawRoundRect(endXParent, itemHeight * (i + 0.5f) - ITEM_HEIGHT / 2f, getWidth() / 2f + rect.width() / 2f + ROUND_RADIUS, itemHeight * (i + 0.5f) + ITEM_HEIGHT / 2f, ROUND_RADIUS, ROUND_RADIUS, paint);
+                canvas.drawText(nameParent, getWidth() / 2f - rect.width() / 2f, itemHeight * (i + 0.5f) - (rect.bottom + rect.top) / 2f, textPaint);
+                List<Fish> listGrandParent = fishParent.getProducer();
+                if (Checker.hasList(listGrandParent)) {
+                    float itemHeight2 = itemHeight / (float) listGrandParent.size();
+                    for (int j = 0; j < listGrandParent.size(); j++) {
+                        if (showHelper) {
+                            canvas.drawLine(getWidth() * 2 / 3f, itemHeight2 * (j + 1), getWidth(), itemHeight2 * (j + 1), textPaint);
+                            canvas.drawLine(getWidth() * 2 / 3f, itemHeight2 * (j + 1) - itemHeight2 / 2f, getWidth(), itemHeight2 * (j + 1) - itemHeight2 / 2f, textPaint);
+                        }
+                        Fish fishGrandParent = listGrandParent.get(j);
+                        String nameGrandParent = fishGrandParent.getName();
+                        textPaint.getTextBounds(nameGrandParent, 0, nameGrandParent.length(), rect);
+                        float endXGrandParent = getWidth() * 5 / 6f - rect.width() / 2f - ROUND_RADIUS;
+                        float endYGrandParent = itemHeight * i + itemHeight2 * (j + 0.5f);
+                        path.reset();
+                        path.moveTo(startX2, endYParent);
+                        path.quadTo(startX2, endYGrandParent, endXGrandParent, endYGrandParent);
+                        canvas.drawPath(path, paintLine);
+                        paint.setShader(getLinearGradient());
+                        canvas.drawRoundRect(endXGrandParent, endYGrandParent - ITEM_HEIGHT / 2f, getWidth() * 5 / 6f + rect.width() / 2f + ROUND_RADIUS, itemHeight * i + itemHeight2 * (j + 0.5f) + ITEM_HEIGHT / 2f, ROUND_RADIUS, ROUND_RADIUS, paint);
+                        canvas.drawText(nameGrandParent, getWidth() * 5 / 6f - rect.width() / 2f, endYGrandParent - (rect.bottom + rect.top) / 2f, textPaint);
+                    }
+                }
             }
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float x = event.getX();
+        float y = event.getY();
+        return super.onTouchEvent(event);
     }
 }
