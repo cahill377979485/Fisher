@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class FisherView extends View {
     private Paint paint, paintLine;
-    private TextPaint textPaint;
+    private TextPaint textPaint, textPaintSmall;
     private Rect rect;
     private Path path;
     @ColorInt
@@ -42,9 +42,9 @@ public class FisherView extends View {
     @ColorInt
     private int colorRed = Color.RED;
 
-    private static final float ITEM_WIDTH = 600;
-    private static final float ITEM_HEIGHT = 100;
-    private static final float ROUND_RADIUS = ITEM_HEIGHT / 2f;
+    private static final float ITEM_WIDTH = 360;
+    private static final float ITEM_HEIGHT = 360;
+    private static final float ROUND_RADIUS = 20;
 
     private LinearGradient linearGradient, linearGradientChild;
 
@@ -79,7 +79,15 @@ public class FisherView extends View {
         textPaint.setAntiAlias(true);
         textPaint.setDither(true);
         textPaint.setTextSize(60);
-        textPaint.setColor(colorWhite);
+        textPaint.setFakeBoldText(true);
+        textPaint.setColor(colorBlue);
+
+        textPaintSmall = new TextPaint();
+        textPaintSmall.setAntiAlias(true);
+        textPaintSmall.setDither(true);
+        textPaintSmall.setTextSize(40);
+        textPaintSmall.setFakeBoldText(true);
+        textPaintSmall.setColor(colorWhite);
 
         rect = new Rect();
         path = new Path();
@@ -107,14 +115,18 @@ public class FisherView extends View {
         if (Checker.isNull(fish)) return;
         //画名称
         String name = fish.getName();
-        textPaint.measureText(name);
         textPaint.getTextBounds(name, 0, name.length(), rect);
         //渐变色
         paint.setShader(getLinearGradient());
-        float startX = getWidth() / 6f + rect.width() / 2f + ROUND_RADIUS;
+        float startX = getWidth() / 6f + ITEM_WIDTH / 2f;
         float startY = getHeight() / 2f;
-        canvas.drawRoundRect(getWidth() / 6f - rect.width() / 2f - ROUND_RADIUS, getHeight() / 2f - ITEM_HEIGHT / 2f, startX, getHeight() / 2f + ITEM_HEIGHT / 2f, ROUND_RADIUS, ROUND_RADIUS, paint);
+        canvas.drawRoundRect(getWidth() / 6f - ITEM_WIDTH / 2f, getHeight() / 2f - ITEM_HEIGHT / 2f, startX, getHeight() / 2f + ITEM_HEIGHT / 2f, ROUND_RADIUS, ROUND_RADIUS, paint);
         canvas.drawText(name, getWidth() / 6f - rect.width() / 2f, getHeight() / 2f - (rect.bottom + rect.top) / 2f, textPaint);
+        //num
+        String num = String.valueOf(fish.getHas());
+        textPaintSmall.getTextBounds(num, 0, num.length(), rect);
+        textPaintSmall.setColor(colorWhite);
+        canvas.drawText(num, getWidth() / 6f - rect.width() / 2f, getHeight() / 2f + ITEM_HEIGHT / 3f - (rect.bottom + rect.top) / 2f, textPaintSmall);
         //
         List<Fish> listParent = fish.getProducer();
         if (Checker.hasList(listParent)) {
@@ -127,16 +139,21 @@ public class FisherView extends View {
                 Fish fishParent = listParent.get(i);
                 String nameParent = fishParent.getName();
                 textPaint.getTextBounds(nameParent, 0, nameParent.length(), rect);
-                float endXParent = getWidth() / 2f - rect.width() / 2f - ROUND_RADIUS;
+                float endXParent = getWidth() / 2f - ITEM_WIDTH / 2f;
                 float endYParent = itemHeight * (i + 0.5f);
-                float startX2 = getWidth() / 2f + rect.width() / 2f + ROUND_RADIUS;
+                float startX2 = getWidth() / 2f + ITEM_WIDTH / 2f;
                 path.reset();
                 path.moveTo(startX, startY);
                 path.quadTo(startX, endYParent, endXParent, endYParent);
                 canvas.drawPath(path, paintLine);
                 paint.setShader(getLinearGradient());
-                canvas.drawRoundRect(endXParent, itemHeight * (i + 0.5f) - ITEM_HEIGHT / 2f, getWidth() / 2f + rect.width() / 2f + ROUND_RADIUS, itemHeight * (i + 0.5f) + ITEM_HEIGHT / 2f, ROUND_RADIUS, ROUND_RADIUS, paint);
+                canvas.drawRoundRect(endXParent, itemHeight * (i + 0.5f) - ITEM_HEIGHT / 2f, getWidth() / 2f + ITEM_WIDTH / 2f, itemHeight * (i + 0.5f) + ITEM_HEIGHT / 2f, ROUND_RADIUS, ROUND_RADIUS, paint);
                 canvas.drawText(nameParent, getWidth() / 2f - rect.width() / 2f, itemHeight * (i + 0.5f) - (rect.bottom + rect.top) / 2f, textPaint);
+                //num
+                String numParent = fishParent.getHas() + "/" + fishParent.getNeed();
+                textPaintSmall.getTextBounds(numParent, 0, numParent.length(), rect);
+                textPaintSmall.setColor(fishParent.getHas() > fishParent.getNeed() ? colorWhite : colorRed);
+                canvas.drawText(numParent, getWidth() / 2f - rect.width() / 2f, itemHeight * (i + 0.5f) + ITEM_HEIGHT / 3f - (rect.bottom + rect.top) / 2f, textPaintSmall);
                 List<Fish> listGrandParent = fishParent.getProducer();
                 if (Checker.hasList(listGrandParent)) {
                     float itemHeight2 = itemHeight / (float) listGrandParent.size();
@@ -148,15 +165,20 @@ public class FisherView extends View {
                         Fish fishGrandParent = listGrandParent.get(j);
                         String nameGrandParent = fishGrandParent.getName();
                         textPaint.getTextBounds(nameGrandParent, 0, nameGrandParent.length(), rect);
-                        float endXGrandParent = getWidth() * 5 / 6f - rect.width() / 2f - ROUND_RADIUS;
+                        float endXGrandParent = getWidth() * 5 / 6f - ITEM_WIDTH / 2f;
                         float endYGrandParent = itemHeight * i + itemHeight2 * (j + 0.5f);
                         path.reset();
                         path.moveTo(startX2, endYParent);
                         path.quadTo(startX2, endYGrandParent, endXGrandParent, endYGrandParent);
                         canvas.drawPath(path, paintLine);
                         paint.setShader(getLinearGradient());
-                        canvas.drawRoundRect(endXGrandParent, endYGrandParent - ITEM_HEIGHT / 2f, getWidth() * 5 / 6f + rect.width() / 2f + ROUND_RADIUS, itemHeight * i + itemHeight2 * (j + 0.5f) + ITEM_HEIGHT / 2f, ROUND_RADIUS, ROUND_RADIUS, paint);
+                        canvas.drawRoundRect(endXGrandParent, endYGrandParent - ITEM_HEIGHT / 2f, getWidth() * 5 / 6f + ITEM_WIDTH / 2f, itemHeight * i + itemHeight2 * (j + 0.5f) + ITEM_HEIGHT / 2f, ROUND_RADIUS, ROUND_RADIUS, paint);
                         canvas.drawText(nameGrandParent, getWidth() * 5 / 6f - rect.width() / 2f, endYGrandParent - (rect.bottom + rect.top) / 2f, textPaint);
+                        //num
+                        String numGrandParent = fishGrandParent.getHas() + "/" + fishGrandParent.getNeed();
+                        textPaintSmall.getTextBounds(numGrandParent, 0, numGrandParent.length(), rect);
+                        textPaintSmall.setColor(fishGrandParent.getHas() > fishGrandParent.getNeed() ? colorWhite : colorRed);
+                        canvas.drawText(numGrandParent, getWidth() * 5 / 6f - rect.width() / 2f, endYGrandParent + ITEM_HEIGHT / 3f - (rect.bottom + rect.top) / 2f, textPaintSmall);
                     }
                 }
             }
