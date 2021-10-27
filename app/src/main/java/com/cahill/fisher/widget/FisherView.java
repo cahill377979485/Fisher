@@ -12,12 +12,17 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 
 import com.cahill.fisher.bean.Fish;
+import com.cahill.fisher.bean.TypeData;
 import com.cahill.fisher.util.Checker;
+import com.cahill.fisher.util.TypeDataNames;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -49,6 +54,8 @@ public class FisherView extends View {
     private LinearGradient linearGradient, linearGradientChild;
 
     private Fish fish;
+    private float lastX, lastY;
+    private static final float MAX_CLICK_DISTANCE = 5;//点击时，手指按下离抬起的位置最多这么多。超出这个值视为拖动而非点击。
     private boolean editMode;
     private boolean showHelper;
 
@@ -191,6 +198,50 @@ public class FisherView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                lastX = x;
+                lastY = y;
+                return true;
+            case MotionEvent.ACTION_UP:
+                if (Math.abs(x - lastX) > MAX_CLICK_DISTANCE || Math.abs(y - lastY) > MAX_CLICK_DISTANCE)
+                    return false;
+                if (Checker.notNull(fish)) {
+                    if (x > getWidth() / 6f - ITEM_WIDTH / 2f && x < getWidth() / 6f + ITEM_WIDTH / 2f && y > getHeight() / 2f - ITEM_HEIGHT / 2f && y < getHeight() / 2f + ITEM_HEIGHT / 2f) {
+                        Toast.makeText(getContext(), "点击了SSS鱼=" + fish.getName(), Toast.LENGTH_SHORT).show();
+                        EventBus.getDefault().post(new TypeData<>(TypeDataNames.clickFisherViewFish, fish));
+                        return true;
+                    }
+                    List<Fish> listParent = fish.getProducer();
+                    if (Checker.hasList(listParent)) {
+                        float itemHeightParent = getHeight() / (float) listParent.size();
+                        for (int i = 0; i < listParent.size(); i++) {
+                            float startYParent = itemHeightParent * i;
+                            Fish fishParent = listParent.get(i);
+                            if (x > getWidth() / 2f - ITEM_WIDTH / 2f && x < getWidth() / 2f + ITEM_WIDTH / 2f && y > startYParent + itemHeightParent / 2f - ITEM_HEIGHT / 2f && y < startYParent + itemHeightParent / 2f + ITEM_HEIGHT / 2f) {
+                                Toast.makeText(getContext(), "点击了SS鱼=" + fishParent.getName(), Toast.LENGTH_SHORT).show();
+                                EventBus.getDefault().post(new TypeData<>(TypeDataNames.clickFisherViewFish, fishParent));
+                                return true;
+                            }
+                            List<Fish> listGrandParent = fishParent.getProducer();
+                            if (Checker.hasList(listGrandParent)) {
+                                float itemHeightGrandParent = itemHeightParent / listGrandParent.size();
+                                for (int j = 0; j < listGrandParent.size(); j++) {
+                                    float startYGrandParent = startYParent + itemHeightGrandParent * j;
+                                    Fish fishGrandParent = listGrandParent.get(j);
+                                    if (x > getWidth() * 5 / 6f - ITEM_WIDTH / 2f && x < getWidth() * 5 / 6f + ITEM_WIDTH / 2f && y > startYGrandParent + itemHeightGrandParent / 2f - ITEM_HEIGHT / 2f && y < startYGrandParent + itemHeightGrandParent / 2f + ITEM_HEIGHT / 2f) {
+                                        Toast.makeText(getContext(), "点击了S鱼=" + fishGrandParent.getName(), Toast.LENGTH_SHORT).show();
+                                        EventBus.getDefault().post(new TypeData<>(TypeDataNames.clickFisherViewFish, fishGrandParent));
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return true;
+            default:
+        }
         return super.onTouchEvent(event);
     }
 }

@@ -2,7 +2,10 @@ package com.cahill.fisher.util;
 
 import com.cahill.fisher.bean.AllFish;
 import com.cahill.fisher.bean.Fish;
+import com.cahill.fisher.bean.TypeData;
 import com.google.gson.Gson;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +18,7 @@ import java.util.List;
 public class DataUtil {
 
 
-    public static void initAllFish(){
+    public static void initAllFish() {
         Fish yly = new Fish("银龙鱼", null, "银龙鱼石", 500, 908, false);
         Fish lsy = new Fish("蓝鲨鱼", null, "蓝鲨鱼石", 500, 936, false);
         Fish bom = new Fish("布偶猫", null, "布偶猫石", 500, 936, false);
@@ -148,8 +151,27 @@ public class DataUtil {
                 Fish f = list.get(i);
                 if (f.getName().equals(fish.getName())) {
                     list.set(i, fish);
-                    has = true;
-                    break;
+                    if (!has) has = true;
+                }
+                List<Fish> listParent = f.getProducer();
+                if (Checker.hasList(listParent)) {
+                    for (int j = 0; j < listParent.size(); j++) {
+                        Fish fishParent = listParent.get(j);
+                        if (fishParent.getName().equals(fish.getName())) {
+                            listParent.set(j, fish);
+                            if (!has) has = true;
+                        }
+                        List<Fish> listGrandParent = fishParent.getProducer();
+                        if (Checker.hasList(listGrandParent)) {
+                            for (int k = 0; k < listGrandParent.size(); k++) {
+                                Fish fishGrandParent = listGrandParent.get(k);
+                                if (fishGrandParent.getName().equals(fish.getName())) {
+                                    listGrandParent.set(k, fish);
+                                    if (!has) has = true;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -160,6 +182,7 @@ public class DataUtil {
     public static void saveAllFish(List<Fish> list) {
         String str = new Gson().toJson(new AllFish(list), AllFish.class);
         SPUtils.getInstance().put(ValSp.ALL_FISH, str);
+        EventBus.getDefault().post(new TypeData<>(TypeDataNames.updateAllFish, true));
     }
 
     public static List<Fish> getAllFish() {
