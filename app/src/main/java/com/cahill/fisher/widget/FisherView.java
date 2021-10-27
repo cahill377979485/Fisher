@@ -144,7 +144,8 @@ public class FisherView extends View {
                 float startX2 = getWidth() / 2f + ITEM_WIDTH / 2f;
                 path.reset();
                 path.moveTo(startX, startY);
-                path.quadTo(startX, endYParent, endXParent, endYParent);
+                float centerX = (endXParent + startX) / 2f;
+                path.cubicTo(centerX, startY, centerX, endYParent, endXParent, endYParent);
                 canvas.drawPath(path, paintLine);
                 paint.setShader(getLinearGradient());
                 canvas.drawRoundRect(endXParent, itemHeight * (i + 0.5f) - ITEM_HEIGHT / 2f, getWidth() / 2f + ITEM_WIDTH / 2f, itemHeight * (i + 0.5f) + ITEM_HEIGHT / 2f, ROUND_RADIUS, ROUND_RADIUS, paint);
@@ -169,7 +170,8 @@ public class FisherView extends View {
                         float endYGrandParent = itemHeight * i + itemHeight2 * (j + 0.5f);
                         path.reset();
                         path.moveTo(startX2, endYParent);
-                        path.quadTo(startX2, endYGrandParent, endXGrandParent, endYGrandParent);
+                        float centerXParent = (endXGrandParent + startX2) / 2f;
+                        path.cubicTo(centerXParent, endYParent, centerXParent, endYGrandParent, endXGrandParent, endYGrandParent);
                         canvas.drawPath(path, paintLine);
                         paint.setShader(getLinearGradient());
                         canvas.drawRoundRect(endXGrandParent, endYGrandParent - ITEM_HEIGHT / 2f, getWidth() * 5 / 6f + ITEM_WIDTH / 2f, itemHeight * i + itemHeight2 * (j + 0.5f) + ITEM_HEIGHT / 2f, ROUND_RADIUS, ROUND_RADIUS, paint);
