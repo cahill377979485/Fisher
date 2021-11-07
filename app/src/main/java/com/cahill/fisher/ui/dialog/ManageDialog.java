@@ -38,12 +38,12 @@ public class ManageDialog extends BaseDialogFragment {
             return;
         }
         UIHelper.setText(binding.etName, fish.getName());
-        UIHelper.setText(binding.etNeed, fish.getNeed());
-        UIHelper.setText(binding.etHas, fish.getHas());
+        UIHelper.setText(binding.etHas, fish.getNum());
+        UIHelper.setText(binding.etPriority, fish.getPriority());
         binding.tvCommit.setOnClickListener(v -> {
             try {
-                fish.setNeed(Integer.parseInt(UIHelper.getEtText(binding.etNeed)));
-                fish.setHas(Integer.parseInt(UIHelper.getEtText(binding.etHas)));
+                fish.setNum(Integer.parseInt(UIHelper.getEtText(binding.etHas)));
+                fish.setPriority(Integer.parseInt(UIHelper.getEtText(binding.etPriority)));
                 DataUtil.saveFish(fish);
                 dismiss();
             } catch (NumberFormatException e) {

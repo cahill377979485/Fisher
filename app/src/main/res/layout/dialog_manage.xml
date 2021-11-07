@@ -30,30 +30,6 @@
         app:layout_constraintTop_toTopOf="@id/tv_name" />
 
     <TextView
-        android:id="@+id/tv_need"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/edge"
-        android:layout_marginTop="@dimen/edge"
-        android:text="@string/need"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_name" />
-
-    <EditText
-        android:id="@+id/et_need"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/edge_small"
-        android:layout_marginEnd="@dimen/edge"
-        android:background="@drawable/bg_edit"
-        android:imeOptions="actionNext"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="@id/tv_need"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_need"
-        app:layout_constraintTop_toTopOf="@id/tv_need" />
-
-    <TextView
         android:id="@+id/tv_has"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -61,7 +37,7 @@
         android:layout_marginTop="@dimen/edge"
         android:text="@string/has_already"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_need" />
+        app:layout_constraintTop_toBottomOf="@id/tv_name" />
 
     <EditText
         android:id="@+id/et_has"
@@ -70,12 +46,36 @@
         android:layout_marginStart="@dimen/edge_small"
         android:layout_marginEnd="@dimen/edge"
         android:background="@drawable/bg_edit"
-        android:imeOptions="actionDone"
+        android:imeOptions="actionNext"
         android:inputType="number"
         app:layout_constraintBottom_toBottomOf="@id/tv_has"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_has"
         app:layout_constraintTop_toTopOf="@id/tv_has" />
+
+    <TextView
+        android:id="@+id/tv_priority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/edge"
+        android:layout_marginTop="@dimen/edge"
+        android:text="@string/priority"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_has" />
+
+    <EditText
+        android:id="@+id/et_priority"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/edge_small"
+        android:layout_marginEnd="@dimen/edge"
+        android:background="@drawable/bg_edit"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@id/tv_priority"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_priority"
+        app:layout_constraintTop_toTopOf="@id/tv_priority" />
 
     <TextView
         android:id="@+id/tv_commit"
@@ -92,6 +92,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_has" />
+        app:layout_constraintTop_toBottomOf="@id/tv_priority" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

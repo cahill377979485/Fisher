@@ -33,7 +33,7 @@ public class ScheduleResultActivity extends BaseSecondActivity {
     private ScheduleFish scheduleFish;
 
     public static void start(Activity activity, ScheduleFish scheduleFish) {
-        Intent intent = new Intent();
+        Intent intent = new Intent(activity, ScheduleResultActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Val.DATA, scheduleFish);
         intent.putExtras(bundle);
@@ -71,13 +71,19 @@ public class ScheduleResultActivity extends BaseSecondActivity {
         List<Fish> listAll = scheduleFish.getList();
         if (Checker.noList(listAll)) return;
         int n = 1;
+        int totalNum = 0;
         for (int i = 0; i < listAll.size(); i++) {
-            if (i % 30 == 0) {
-                items.add(new TitleBean("第" + (n++) + "池"));
+            Fish fish = listAll.get(i);
+            int num = fish.getNum();
+            for (int j = 0; j < num; j++) {
+                if (totalNum % 30 == 0) {
+                    items.add(new TitleBean("第" + (n++) + "池"));
+                    adapter.notifyItemInserted(items.size() - 1);
+                }
+                totalNum++;
+                items.add(listAll.get(i));
                 adapter.notifyItemInserted(items.size() - 1);
             }
-            items.add(listAll.get(i));
-            adapter.notifyItemInserted(items.size() - 1);
         }
     }
 }

@@ -12,6 +12,7 @@ import com.cahill.fisher.bean.TagBean;
 import com.cahill.fisher.binder.TagBinder;
 import com.cahill.fisher.databinding.ActivityMainBinding;
 import com.cahill.fisher.ui.RelationshipActivity;
+import com.cahill.fisher.ui.ScheduleActivity;
 
 import me.drakeet.multitype.Items;
 import me.drakeet.multitype.MultiTypeAdapter;
@@ -34,7 +35,7 @@ public class MainActivity extends BaseActivity {
         binding.rv.setAdapter(adapter);
         //data
         items.add(new TagBean("关系", v-> RelationshipActivity.start(this)));
-        items.add(new TagBean("数量", v-> RelationshipActivity.start(this)));
+        items.add(new TagBean("安排", v-> ScheduleActivity.start(this)));
         adapter.notifyDataSetChanged();
     }
 

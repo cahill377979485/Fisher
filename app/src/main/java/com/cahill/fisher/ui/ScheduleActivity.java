@@ -12,9 +12,11 @@ import com.cahill.fisher.R;
 import com.cahill.fisher.base.BaseSecondActivity;
 import com.cahill.fisher.bean.Fish;
 import com.cahill.fisher.bean.ScheduleFish;
+import com.cahill.fisher.bean.TitleBean;
 import com.cahill.fisher.bean.TypeData;
 import com.cahill.fisher.databinding.ActivityScheduleBinding;
 import com.cahill.fisher.ui.binder.FishBinder;
+import com.cahill.fisher.ui.binder.TitleBinder;
 import com.cahill.fisher.util.Checker;
 import com.cahill.fisher.util.DataUtil;
 import com.cahill.fisher.util.TypeDataNames;
@@ -60,8 +62,16 @@ public class ScheduleActivity extends BaseSecondActivity {
         setContentView(binding.getRoot());
         setTitle(R.string.schedule);
         adapter = new MultiTypeAdapter(items);
+        adapter.register(TitleBean.class, new TitleBinder());
         adapter.register(Fish.class, new FishBinder());
-        binding.rv.setLayoutManager(new GridLayoutManager(this, 6));
+        GridLayoutManager manager = new GridLayoutManager(this, 6);
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return items.get(position) instanceof TitleBean ? 6 : 1;
+            }
+        });
+        binding.rv.setLayoutManager(manager);
         binding.rv.setHasFixedSize(true);
         binding.rv.setAdapter(adapter);
         binding.tv.setOnClickListener(v -> {
@@ -75,11 +85,19 @@ public class ScheduleActivity extends BaseSecondActivity {
      * 加载数据
      */
     private void loadData() {
-        //为了去重，用set来装结果
-        Set<Fish> setSSS = new HashSet<>();
-        Set<Fish> setSS = new HashSet<>();
-        Set<Fish> setS = new HashSet<>();
-        List<Fish> listAll = DataUtil.getAllFish();
+        List<Fish> listSSS = new ArrayList<>();
+        List<Fish> listSS = new ArrayList<>();
+        List<Fish> listS = new ArrayList<>();
+        List<Fish> listAll = new ArrayList<>();
+        listAll.add(DataUtil.getFish("处女座"));
+        listAll.add(DataUtil.getFish("射手座"));
+        listAll.add(DataUtil.getFish("金牛座"));
+        listAll.add(DataUtil.getFish("水瓶座"));
+        listAll.add(DataUtil.getFish("摩羯座"));
+        listAll.add(DataUtil.getFish("巨蟹座"));
+        listAll.add(DataUtil.getFish("天蝎座"));
+        listAll.add(DataUtil.getFish("狮子座"));
+        listAll.add(DataUtil.getFish("白羊座"));
         if (Checker.hasList(listAll)) {
             for (int i = 0; i < listAll.size(); i++) {
                 Fish fish = listAll.get(i);//这里取到的可能是SSS或者SS鱼
@@ -91,28 +109,34 @@ public class ScheduleActivity extends BaseSecondActivity {
                         if (Checker.hasList(listGrandParent)) {
                             for (int k = 0; k < listGrandParent.size(); k++) {
                                 Fish fishGrandParent = listGrandParent.get(k);
-                                addFish(setSSS, setSS, setS, fishGrandParent);
+                                addFish(listSSS, listSS, listS, fishGrandParent);
                             }
                         }
-                        addFish(setSSS, setSS, setS, fishParent);
+                        addFish(listSSS, listSS, listS, fishParent);
                     }
                 }
-                addFish(setSSS, setSS, setS, fish);
+                addFish(listSSS, listSS, listS, fish);
             }
         }
         if (Checker.hasList(items)) {
             items.clear();
             adapter.notifyDataSetChanged();
         }
-        items.addAll(setSSS);
+        items.add(new TitleBean("星座鱼"));
         adapter.notifyDataSetChanged();
-        items.addAll(setSS);
+        items.addAll(listSSS);
         adapter.notifyDataSetChanged();
-        items.addAll(setS);
+        items.add(new TitleBean("SS鱼"));
         adapter.notifyDataSetChanged();
-        listSSS = new ArrayList<>(setSSS);
-        listSS = new ArrayList<>(setSS);
-        listS = new ArrayList<>(setS);
+        items.addAll(listSS);
+        items.add(new TitleBean("S鱼"));
+        adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
+        items.addAll(listS);
+        adapter.notifyDataSetChanged();
+        this.listSSS = new ArrayList<>(listSSS);
+        this.listSS = new ArrayList<>(listSS);
+        this.listS = new ArrayList<>(listS);
     }
 
     /**
@@ -172,13 +196,18 @@ public class ScheduleActivity extends BaseSecondActivity {
         return pairs;
     }
 
+    /**
+     * 有bug：选择SSS鱼之后，后面会重复出现SS鱼。
+     * @return
+     */
     private List<Fish> getScheduleFish() {
-        List<Fish> result = new ArrayList<>();
         if (Checker.noList(items)) {
             Toast.makeText(this, "数据错误", Toast.LENGTH_SHORT).show();
             return null;
         }
+        List<Fish> result = new ArrayList<>();
         int totalSize = sizePoor1 + sizePoor2 + sizePoor3;
+        int totalNum = 0;
         LinkedList<Fish> resultPriority = new LinkedList<>();
         LinkedList<Fish> resultPriorityParent = new LinkedList<>();
         LinkedList<Fish> resultPriorityGrandParent = new LinkedList<>();
@@ -188,14 +217,20 @@ public class ScheduleActivity extends BaseSecondActivity {
             Object o = items.get(i);
             if (o instanceof Fish) {
                 Fish fish = (Fish) o;
-                if (fish.isRequired()) {
+                if (fish.getPriority() > fish.getType()) {
                     resultPriority.add(fish);
+                    totalNum += fish.getNum();
+                    if (totalNum >= totalSize) {
+                        break;
+                    }
                 }
             }
         }
-        if (result.size() >= totalSize) return result;
+        result.addAll(resultPriority);
+        if (getFishNum(result) >= totalSize) return result;
         //将父鱼加入，并加入祖鱼
         if (Checker.hasList(resultPriority)) {
+            loop:
             for (int i = 0; i < resultPriority.size(); i++) {
                 Fish fish = resultPriority.get(i);
                 List<Fish> listParent = fish.getProducer();
@@ -209,13 +244,22 @@ public class ScheduleActivity extends BaseSecondActivity {
                             //加入最低额的父鱼们
                             for (int k = 0; k < pairs; k++) {
                                 resultPriorityParent.add(fishParent);
+                                totalNum += fishParent.getNum();
+                                if (totalNum >= totalSize) {
+                                    break loop;
+                                }
                             }
                             //为最少的父鱼增加祖鱼
                             if (fishParent.getNum() == pairs) {
                                 List<Fish> listGrandParent = fishParent.getProducer();
                                 if (Checker.hasList(listGrandParent)) {
                                     for (int k = 0; k < listGrandParent.size(); k++) {
-                                        resultPriorityGrandParent.add(listGrandParent.get(k));
+                                        Fish fishGrandParent = listGrandParent.get(k);
+                                        resultPriorityGrandParent.add(fishGrandParent);
+                                        totalNum += fishGrandParent.getNum();
+                                        if (totalNum >= totalSize) {
+                                            break loop;
+                                        }
                                     }
                                 }
                             }
@@ -224,12 +268,10 @@ public class ScheduleActivity extends BaseSecondActivity {
                 }
             }
         }
-        result.addAll(resultPriority);
-        if (result.size() >= totalSize) return result;
         result.addAll(resultPriorityParent);
-        if (result.size() >= totalSize) return result;
+        if (getFishNum(result) >= totalSize) return result;
         result.addAll(resultPriorityGrandParent);
-        if (result.size() >= totalSize) return result;
+        if (getFishNum(result) >= totalSize) return result;
         //将SSS、SS、S填满剩下的格子
         //SSS
         LinkedList<Fish> resultSSS = new LinkedList<>();
@@ -237,33 +279,46 @@ public class ScheduleActivity extends BaseSecondActivity {
             Object o = items.get(i);
             if (o instanceof Fish) {
                 Fish fish = (Fish) o;
-                if (fish.getType() == Val.TYPE_SSS) {
+                if (!result.contains(fish) && fish.getType() == Val.TYPE_SSS) {
                     resultSSS.add(fish);
+                    totalNum += fish.getNum();
+                    if (totalNum >= totalSize) {
+                        break;
+                    }
                 }
             }
         }
         result.addAll(resultSSS);
-        if (result.size() >= totalSize) return result;
+        if (getFishNum(result) >= totalSize) return result;
         //SS
         LinkedList<Fish> resultSS = new LinkedList<>();
         for (int i = 0; i < items.size(); i++) {
             Object o = items.get(i);
             if (o instanceof Fish) {
                 Fish fish = (Fish) o;
-                if (fish.getType() == Val.TYPE_SS) {
+                if (!result.contains(fish) && fish.getType() == Val.TYPE_SS) {
                     resultSS.add(fish);
+                    totalNum += fish.getNum();
+                    if (totalNum >= totalSize) {
+                        break;
+                    }
                 }
             }
         }
         result.addAll(resultSS);
+        if (getFishNum(result) >= totalSize) return result;
         //S
         LinkedList<Fish> resultS = new LinkedList<>();
         for (int i = 0; i < items.size(); i++) {
             Object o = items.get(i);
             if (o instanceof Fish) {
                 Fish fish = (Fish) o;
-                if (fish.getType() == Val.TYPE_S) {
+                if (!result.contains(fish) && fish.getType() == Val.TYPE_S) {
                     resultS.add(fish);
+                    totalNum += fish.getNum();
+                    if (totalNum >= totalSize) {
+                        break;
+                    }
                 }
             }
         }
@@ -271,24 +326,37 @@ public class ScheduleActivity extends BaseSecondActivity {
         return result;
     }
 
+    private int getFishNum(List<Fish> list) {
+        int num = 0;
+        if (Checker.hasList(list)) {
+            for (int i = 0; i < list.size(); i++) {
+                num += list.get(i).getNum();
+            }
+        }
+        return num;
+    }
+
     /**
-     * 根据类型，将鱼加入到Set中，这样可以自动去重
+     * 根据类型，将鱼加入到集合
      *
-     * @param setSSS SSS鱼的Set
-     * @param setSS  SS鱼的Set
-     * @param setS   S鱼的Set
-     * @param fish   鱼
+     * @param listSSS SSS鱼的集合
+     * @param listSS  SS鱼的集合
+     * @param listS   S鱼的集合
+     * @param fish    鱼
      */
-    private void addFish(Set<Fish> setSSS, Set<Fish> setSS, Set<Fish> setS, Fish fish) {
+    private void addFish(List<Fish> listSSS, List<Fish> listSS, List<Fish> listS, Fish fish) {
         switch (fish.getType()) {
             case Val.TYPE_SSS:
-                setSSS.add(fish);
+                if (!listSSS.contains(fish))
+                    listSSS.add(fish);
                 break;
             case Val.TYPE_SS:
-                setSS.add(fish);
+                if (!listSS.contains(fish))
+                    listSS.add(fish);
                 break;
             case Val.TYPE_S:
-                setS.add(fish);
+                if (!listS.contains(fish))
+                    listS.add(fish);
                 break;
         }
     }
@@ -305,8 +373,10 @@ public class ScheduleActivity extends BaseSecondActivity {
                 if (o instanceof Fish) {
                     Fish fish = (Fish) o;
                     if (fish.getName().equals(bean.getName())) {
-                        int priority = bean.getPriority() == bean.getType() ? bean.getType() + Val.PRIORITIES.length : bean.getType();
-                        fish.setPriority(priority);
+                        int priority = bean.getPriority();
+                        if (priority == 0) priority = bean.getType();
+                        int newPriority = priority == bean.getType() ? bean.getType() + Val.PRIORITIES.length : bean.getType();
+                        fish.setPriority(newPriority);
                         DataUtil.saveFish(fish);
                         adapter.notifyDataSetChanged();
                         break;

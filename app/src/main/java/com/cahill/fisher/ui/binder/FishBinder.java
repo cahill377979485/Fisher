@@ -31,8 +31,10 @@ public class FishBinder extends ItemViewBinder<Fish, FishBinder.VH> {
     protected void onBindViewHolder(@NonNull VH holder, @NonNull Fish item) {
         UIHelper.setText(holder.tvName, item.getName());
         UIHelper.setText(holder.tvNum, "拥有：" + item.getNum());
-        UIHelper.setText(holder.tvPriority, "优先级：" + item.getPriority());
-        UIHelper.setBackgroundResource(holder.cl, item.getPriority() >= 2 ? R.drawable.btn_red_round10 : item.getPriority() == 1 ? R.drawable.btn_orange_round10 : R.drawable.btn_blue_round10);
+        int priority = item.getPriority();
+        if (priority == 0) priority = item.getType();
+        UIHelper.setText(holder.tvPriority, "优先级：" + priority);
+        UIHelper.setBackgroundResource(holder.cl, priority > item.getType() ? R.drawable.btn_red_round10 : R.drawable.btn_blue_round10);
         UIHelper.setOnClickListener(holder.itemView, v -> EventBus.getDefault().post(new TypeData<>(TypeDataNames.clickFish, item)));
     }
 
