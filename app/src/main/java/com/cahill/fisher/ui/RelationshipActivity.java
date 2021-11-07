@@ -12,7 +12,7 @@ import com.cahill.fisher.base.BaseSecondActivity;
 import com.cahill.fisher.bean.Fish;
 import com.cahill.fisher.bean.TypeData;
 import com.cahill.fisher.databinding.ActivityRelationshipBinding;
-import com.cahill.fisher.ui.binder.FishBinder;
+import com.cahill.fisher.ui.binder.FishRelationshipBinder;
 import com.cahill.fisher.ui.dialog.ManageDialog;
 import com.cahill.fisher.util.Checker;
 import com.cahill.fisher.util.DataUtil;
@@ -48,10 +48,8 @@ public class RelationshipActivity extends BaseSecondActivity {
         binding = ActivityRelationshipBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
         setTitle(R.string.relationship);
-        setMore(v -> {
-        });
         adapter = new MultiTypeAdapter(items);
-        adapter.register(Fish.class, new FishBinder());
+        adapter.register(Fish.class, new FishRelationshipBinder());
         binding.rv.setLayoutManager(new GridLayoutManager(this, 1));
         binding.rv.setHasFixedSize(true);
         binding.rv.setAdapter(adapter);
@@ -70,7 +68,11 @@ public class RelationshipActivity extends BaseSecondActivity {
         list.add(DataUtil.getFish("狮子座"));
         list.add(DataUtil.getFish("天蝎座"));
         list.add(DataUtil.getFish("巨蟹座"));
+        list.add(DataUtil.getFish("摩羯座"));
         list.add(DataUtil.getFish("水瓶座"));
+        list.add(DataUtil.getFish("金牛座"));
+        list.add(DataUtil.getFish("射手座"));
+        list.add(DataUtil.getFish("处女座"));
         if (Checker.hasList(items)) {
             items.clear();
             adapter.notifyDataSetChanged();

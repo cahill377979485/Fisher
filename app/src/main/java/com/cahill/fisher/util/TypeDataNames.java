@@ -6,6 +6,7 @@ package com.cahill.fisher.util;
  * @desc
  */
 public class TypeDataNames {
+    public static final String clickFish = "clickFish";
     public static final String updateAllFish = "updateAllFish";
     public static final String clickFisherViewFish = "clickFisherViewFish";
 }

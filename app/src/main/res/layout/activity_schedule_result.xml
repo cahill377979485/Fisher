@@ -4,22 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.flyco.tablayout.SegmentTabLayout
-        android:id="@+id/stl"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="@dimen/edge"
+    <include
+        android:id="@+id/top"
+        layout="@layout/include_title_bar" />
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/schedule_result_desc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/top" />
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/vp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/edge"
+        android:layout_marginBottom="@dimen/edge"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stl" />
-
+        app:layout_constraintTop_toBottomOf="@id/tv_desc" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

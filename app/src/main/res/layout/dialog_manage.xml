@@ -85,7 +85,7 @@
         android:layout_marginTop="@dimen/b60"
         android:layout_marginEnd="@dimen/edge"
         android:layout_marginBottom="@dimen/edge"
-        android:background="@drawable/btn_round_green"
+        android:background="@drawable/bt_green_round"
         android:gravity="center"
         android:text="@string/commit"
         android:textColor="@color/white"

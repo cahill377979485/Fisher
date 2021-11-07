@@ -13,18 +13,16 @@ import java.util.List;
 public class Fish implements Parcelable {
     private String name;
     private List<Fish> producer;
-    private String product;
-    private int need;//兑换所需
-    private int has;//已有碎片
-    private boolean canMutate;//是否可变异
+    private int num;//已拥有
+    private int type;//为sss、ss、s、其他。默认的sss是2，ss是1，s是0。
+    private int priority;//优先级
+    private boolean required;//是否必选
 
-    public Fish(String name, List<Fish> producer, String product, int need, int has, boolean canMutate) {
+    public Fish(String name, List<Fish> producer, int num, int type) {
         this.name = name;
         this.producer = producer;
-        this.product = product;
-        this.need = need;
-        this.has = has;
-        this.canMutate = canMutate;
+        this.num = num;
+        this.type = type;
     }
 
     public String getName() {
@@ -43,36 +41,36 @@ public class Fish implements Parcelable {
         this.producer = producer;
     }
 
-    public String getProduct() {
-        return product;
+    public int getNum() {
+        return num;
     }
 
-    public void setProduct(String product) {
-        this.product = product;
+    public void setNum(int num) {
+        this.num = num;
     }
 
-    public int getNeed() {
-        return need;
+    public int getType() {
+        return type;
     }
 
-    public void setNeed(int need) {
-        this.need = need;
+    public void setType(int type) {
+        this.type = type;
     }
 
-    public int getHas() {
-        return has;
+    public int getPriority() {
+        return priority;
     }
 
-    public void setHas(int has) {
-        this.has = has;
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
-    public boolean isCanMutate() {
-        return canMutate;
+    public boolean isRequired() {
+        return required;
     }
 
-    public void setCanMutate(boolean canMutate) {
-        this.canMutate = canMutate;
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 
     @Override
@@ -84,28 +82,19 @@ public class Fish implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.name);
         dest.writeTypedList(this.producer);
-        dest.writeString(this.product);
-        dest.writeInt(this.need);
-        dest.writeInt(this.has);
-        dest.writeByte(this.canMutate ? (byte) 1 : (byte) 0);
-    }
-
-    public void readFromParcel(Parcel source) {
-        this.name = source.readString();
-        this.producer = source.createTypedArrayList(Fish.CREATOR);
-        this.product = source.readString();
-        this.need = source.readInt();
-        this.has = source.readInt();
-        this.canMutate = source.readByte() != 0;
+        dest.writeInt(this.num);
+        dest.writeInt(this.type);
+        dest.writeInt(this.priority);
+        dest.writeByte(this.required ? (byte) 1 : (byte) 0);
     }
 
     protected Fish(Parcel in) {
         this.name = in.readString();
         this.producer = in.createTypedArrayList(Fish.CREATOR);
-        this.product = in.readString();
-        this.need = in.readInt();
-        this.has = in.readInt();
-        this.canMutate = in.readByte() != 0;
+        this.num = in.readInt();
+        this.type = in.readInt();
+        this.priority = in.readInt();
+        this.required = in.readByte() != 0;
     }
 
     public static final Creator<Fish> CREATOR = new Creator<Fish>() {

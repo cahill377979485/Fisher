@@ -18,6 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.RelationshipActivity" />
+        <activity android:name=".ui.ScheduleActivity" />
+        <activity android:name=".ui.ScheduleResultActivity" />
     </application>
 
 </manifest>
