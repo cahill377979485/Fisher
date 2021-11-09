@@ -5,43 +5,93 @@
     android:id="@+id/cl"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/btn_blue_round10">
+    tools:layout_width="@dimen/b128">
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@null"
+        android:src="@mipmap/bg_normal"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/edge"
         android:textColor="@color/color_white"
-        android:textSize="@dimen/b20"
+        android:textSize="@dimen/b25"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="处女座" />
 
-    <TextView
-        android:id="@+id/tv_num"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/edge"
-        android:textColor="@color/color_white"
-        android:textSize="@dimen/b20"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv"
-        tools:text="拥有：3" />
+    <ImageView
+        android:id="@+id/iv_fish"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/b4"
+        android:contentDescription="@null"
+        android:padding="@dimen/b4"
+        android:src="@mipmap/ic_fish"
+        app:layout_constraintBottom_toBottomOf="@id/tv_num"
+        app:layout_constraintDimensionRatio="42:31"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@id/iv"
+        app:layout_constraintTop_toTopOf="@id/tv_num" />
 
     <TextView
-        android:id="@+id/tv_priority"
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_num"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/edge"
+        android:layout_marginBottom="@dimen/b6"
         android:textColor="@color/color_white"
         android:textSize="@dimen/b20"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@id/iv_fish"
+        tools:text="3" />
+
+    <ImageView
+        android:id="@+id/iv_priority"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@null"
+        android:padding="@dimen/b4"
+        android:src="@mipmap/ic_priority"
+        app:layout_constraintBottom_toBottomOf="@id/tv_num"
+        app:layout_constraintDimensionRatio="42:31"
+        app:layout_constraintEnd_toStartOf="@id/tv_priority"
+        app:layout_constraintTop_toTopOf="@id/tv_num" />
+
+    <TextView
+        android:id="@+id/tv_priority"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/b6"
+        android:layout_marginEnd="@dimen/b10"
+        android:layout_marginBottom="@dimen/b6"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/b20"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/iv"
+        app:layout_constraintHorizontal_weight="1"
+        tools:text="3" />
+
+    <ImageView
+        android:id="@+id/iv_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        android:src="@mipmap/ic_favorite"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_num"
-        tools:text="优先级：3" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

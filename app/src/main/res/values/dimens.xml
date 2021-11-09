@@ -8,6 +8,9 @@
     <dimen name="text_size">18sp</dimen>
     <dimen name="btn_width">180sp</dimen>
     <dimen name="btn_height">36sp</dimen>
+    <dimen name="b6">3dp</dimen>
+    <dimen name="b4">2dp</dimen>
+    <dimen name="b10">5dp</dimen>
     <dimen name="b20">10dp</dimen>
     <dimen name="b22">11dp</dimen>
     <dimen name="b25">12.5dp</dimen>
@@ -16,5 +19,7 @@
     <dimen name="b50">25dp</dimen>
     <dimen name="b60">30dp</dimen>
     <dimen name="b79">39.5dp</dimen>
+    <dimen name="b168">84dp</dimen>
+    <dimen name="b128">64dp</dimen>
     <dimen name="b180">90dp</dimen>
 </resources>

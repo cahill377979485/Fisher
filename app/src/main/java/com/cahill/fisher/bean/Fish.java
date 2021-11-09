@@ -12,6 +12,7 @@ import java.util.Objects;
  * @desc
  */
 public class Fish implements Parcelable {
+    private boolean selected;
     private String name;
     private List<Fish> producer;
     private int num;//已拥有
@@ -24,6 +25,14 @@ public class Fish implements Parcelable {
         this.producer = producer;
         this.num = num;
         this.type = type;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public String getName() {

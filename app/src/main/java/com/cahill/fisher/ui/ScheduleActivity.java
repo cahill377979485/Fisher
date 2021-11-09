@@ -19,6 +19,7 @@ import com.cahill.fisher.ui.binder.FishBinder;
 import com.cahill.fisher.ui.binder.TitleBinder;
 import com.cahill.fisher.util.Checker;
 import com.cahill.fisher.util.DataUtil;
+import com.cahill.fisher.util.LogUtils;
 import com.cahill.fisher.util.TypeDataNames;
 import com.cahill.fisher.util.Val;
 
@@ -37,7 +38,7 @@ import me.drakeet.multitype.MultiTypeAdapter;
 /**
  * @author 文琳_377979485@qq.com
  * @time 2021/10/26 0026 上午 9:29
- * @desc 勾选必选，然后设置希望的星座鱼，生成满池的安排表
+ * @desc 勾选必选，然后设置希望的SS鱼，生成满池的安排表。希望的SSS鱼默认按照观赏度逆序顺序。
  */
 public class ScheduleActivity extends BaseSecondActivity {
     private Items items = new Items();
@@ -47,9 +48,10 @@ public class ScheduleActivity extends BaseSecondActivity {
     private int sizePoor2 = 30;
     private int sizePoor3 = 28;
 
-    private List<Fish> listSSS;
-    private List<Fish> listSS;
-    private List<Fish> listS;
+    private List<Fish> listSSSType;
+    private List<Fish> listSSType;
+    private List<Fish> listSType;
+    private List<Fish> listAllSSSType;
 
     public static void start(Activity activity) {
         Intent intent = new Intent(activity, ScheduleActivity.class);
@@ -85,22 +87,22 @@ public class ScheduleActivity extends BaseSecondActivity {
      * 加载数据
      */
     private void loadData() {
-        List<Fish> listSSS = new ArrayList<>();
-        List<Fish> listSS = new ArrayList<>();
-        List<Fish> listS = new ArrayList<>();
-        List<Fish> listAll = new ArrayList<>();
-        listAll.add(DataUtil.getFish("处女座"));
-        listAll.add(DataUtil.getFish("射手座"));
-        listAll.add(DataUtil.getFish("金牛座"));
-        listAll.add(DataUtil.getFish("水瓶座"));
-        listAll.add(DataUtil.getFish("摩羯座"));
-        listAll.add(DataUtil.getFish("巨蟹座"));
-        listAll.add(DataUtil.getFish("天蝎座"));
-        listAll.add(DataUtil.getFish("狮子座"));
-        listAll.add(DataUtil.getFish("白羊座"));
-        if (Checker.hasList(listAll)) {
-            for (int i = 0; i < listAll.size(); i++) {
-                Fish fish = listAll.get(i);//这里取到的可能是SSS或者SS鱼
+        listSSSType = new ArrayList<>();
+        listSSType = new ArrayList<>();
+        listSType = new ArrayList<>();
+        listAllSSSType = new ArrayList<>();
+        listAllSSSType.add(DataUtil.getFish("处女座"));
+        listAllSSSType.add(DataUtil.getFish("射手座"));
+        listAllSSSType.add(DataUtil.getFish("金牛座"));
+        listAllSSSType.add(DataUtil.getFish("水瓶座"));
+        listAllSSSType.add(DataUtil.getFish("摩羯座"));
+        listAllSSSType.add(DataUtil.getFish("巨蟹座"));
+        listAllSSSType.add(DataUtil.getFish("天蝎座"));
+        listAllSSSType.add(DataUtil.getFish("狮子座"));
+        listAllSSSType.add(DataUtil.getFish("白羊座"));
+        if (Checker.hasList(listAllSSSType)) {
+            for (int i = 0; i < listAllSSSType.size(); i++) {
+                Fish fish = listAllSSSType.get(i);
                 List<Fish> listParent = fish.getProducer();
                 if (Checker.hasList(listParent)) {
                     for (int j = 0; j < listParent.size(); j++) {
@@ -109,34 +111,34 @@ public class ScheduleActivity extends BaseSecondActivity {
                         if (Checker.hasList(listGrandParent)) {
                             for (int k = 0; k < listGrandParent.size(); k++) {
                                 Fish fishGrandParent = listGrandParent.get(k);
-                                addFish(listSSS, listSS, listS, fishGrandParent);
+                                addFish(listSSSType, listSSType, listSType, fishGrandParent);//S
                             }
                         }
-                        addFish(listSSS, listSS, listS, fishParent);
+                        addFish(listSSSType, listSSType, listSType, fishParent);//SS
                     }
                 }
-                addFish(listSSS, listSS, listS, fish);
+                addFish(listSSSType, listSSType, listSType, fish);//SSS
             }
         }
         if (Checker.hasList(items)) {
             items.clear();
             adapter.notifyDataSetChanged();
         }
-        items.add(new TitleBean("星座鱼"));
+        //SSS
+        items.add(new TitleBean("星座鱼" + "(" + listSSSType.size() + "种)"));
         adapter.notifyDataSetChanged();
-        items.addAll(listSSS);
+        items.addAll(listSSSType);
         adapter.notifyDataSetChanged();
-        items.add(new TitleBean("SS鱼"));
+        //SS
+        items.add(new TitleBean("SS鱼" + "(" + listSSType.size() + "种)"));
         adapter.notifyDataSetChanged();
-        items.addAll(listSS);
-        items.add(new TitleBean("S鱼"));
+        items.addAll(listSSType);
         adapter.notifyDataSetChanged();
+        //S
+        items.add(new TitleBean("S鱼" + "(" + listSType.size() + "种)"));
         adapter.notifyDataSetChanged();
-        items.addAll(listS);
+        items.addAll(listSType);
         adapter.notifyDataSetChanged();
-        this.listSSS = new ArrayList<>(listSSS);
-        this.listSS = new ArrayList<>(listSS);
-        this.listS = new ArrayList<>(listS);
     }
 
     /**
@@ -198,6 +200,7 @@ public class ScheduleActivity extends BaseSecondActivity {
 
     /**
      * 有bug：选择SSS鱼之后，后面会重复出现SS鱼。
+     *
      * @return
      */
     private List<Fish> getScheduleFish() {
@@ -207,59 +210,43 @@ public class ScheduleActivity extends BaseSecondActivity {
         }
         List<Fish> result = new ArrayList<>();
         int totalSize = sizePoor1 + sizePoor2 + sizePoor3;
-        int totalNum = 0;
-        LinkedList<Fish> resultPriority = new LinkedList<>();
-        LinkedList<Fish> resultPriorityParent = new LinkedList<>();
-        LinkedList<Fish> resultPriorityGrandParent = new LinkedList<>();
+        LinkedList<Fish> resultPriorityType = new LinkedList<>();
+        LinkedList<Fish> resultPriorityParentType = new LinkedList<>();
+        LinkedList<Fish> resultPriorityGrandParentType = new LinkedList<>();
         //先找到优先养的鱼，将其加入，然后将父鱼加入，最后加入祖鱼。之后根据类型，从SSS鱼加起，再加相应的SS鱼，为SSS鱼配等量的最少的SS鱼。比如三种SS鱼其中一种只有一条，则设置三种鱼各一只。
-        //找到优先养的鱼
+        //找到优先养的SS鱼或S鱼
         for (int i = 0; i < items.size(); i++) {
             Object o = items.get(i);
             if (o instanceof Fish) {
                 Fish fish = (Fish) o;
+                if (fish.getType() == Val.TYPE_SSS) continue;
                 if (fish.getPriority() > fish.getType()) {
-                    resultPriority.add(fish);
-                    totalNum += fish.getNum();
-                    if (totalNum >= totalSize) {
-                        break;
-                    }
+                    resultPriorityType.add(fish);
                 }
             }
         }
-        result.addAll(resultPriority);
+        result.addAll(resultPriorityType);
+        LogUtils.e("resultPriorityType.size()=" + resultPriorityType.size());
         if (getFishNum(result) >= totalSize) return result;
         //将父鱼加入，并加入祖鱼
-        if (Checker.hasList(resultPriority)) {
-            loop:
-            for (int i = 0; i < resultPriority.size(); i++) {
-                Fish fish = resultPriority.get(i);
+        if (Checker.hasList(resultPriorityType)) {
+            for (int i = 0; i < resultPriorityType.size(); i++) {
+                Fish fish = resultPriorityType.get(i);
                 List<Fish> listParent = fish.getProducer();
                 if (Checker.hasList(listParent)) {
                     //检查父鱼至少每种要加入几个
-                    int pairs = getParentPairs(fish);
-                    //已求出每种父鱼要加多少条，这里加入父鱼
-                    if (pairs > 0) {
+                    int pairsParent = getParentPairs(fish);
+                    if (pairsParent > 0) {
                         for (int j = 0; j < listParent.size(); j++) {
                             Fish fishParent = listParent.get(j);
-                            //加入最低额的父鱼们
-                            for (int k = 0; k < pairs; k++) {
-                                resultPriorityParent.add(fishParent);
-                                totalNum += fishParent.getNum();
-                                if (totalNum >= totalSize) {
-                                    break loop;
-                                }
-                            }
-                            //为最少的父鱼增加祖鱼
-                            if (fishParent.getNum() == pairs) {
+                            resultPriorityParentType.add(fishParent);//加入父鱼们
+                            //最少的父鱼
+                            if (fishParent.getNum() == pairsParent) {
                                 List<Fish> listGrandParent = fishParent.getProducer();
-                                if (Checker.hasList(listGrandParent)) {
-                                    for (int k = 0; k < listGrandParent.size(); k++) {
-                                        Fish fishGrandParent = listGrandParent.get(k);
-                                        resultPriorityGrandParent.add(fishGrandParent);
-                                        totalNum += fishGrandParent.getNum();
-                                        if (totalNum >= totalSize) {
-                                            break loop;
-                                        }
+                                if (Checker.hasList(listGrandParent)) {//为最少的父鱼增加祖鱼
+                                    int pairsGrandParent = getParentPairs(fishParent);
+                                    if (pairsGrandParent > 0) {
+                                        resultPriorityGrandParentType.addAll(listGrandParent);
                                     }
                                 }
                             }
@@ -268,61 +255,63 @@ public class ScheduleActivity extends BaseSecondActivity {
                 }
             }
         }
-        result.addAll(resultPriorityParent);
+        result.addAll(resultPriorityParentType);
+        LogUtils.e("resultPriorityParentType.size()=" + resultPriorityParentType.size());
         if (getFishNum(result) >= totalSize) return result;
-        result.addAll(resultPriorityGrandParent);
+        result.addAll(resultPriorityGrandParentType);
+        LogUtils.e("resultPriorityGrandParentType.size()=" + resultPriorityGrandParentType.size());
         if (getFishNum(result) >= totalSize) return result;
         //将SSS、SS、S填满剩下的格子
         //SSS
-        LinkedList<Fish> resultSSS = new LinkedList<>();
-        for (int i = 0; i < items.size(); i++) {
-            Object o = items.get(i);
-            if (o instanceof Fish) {
-                Fish fish = (Fish) o;
-                if (!result.contains(fish) && fish.getType() == Val.TYPE_SSS) {
-                    resultSSS.add(fish);
-                    totalNum += fish.getNum();
-                    if (totalNum >= totalSize) {
-                        break;
-                    }
-                }
-            }
-        }
-        result.addAll(resultSSS);
-        if (getFishNum(result) >= totalSize) return result;
-        //SS
-        LinkedList<Fish> resultSS = new LinkedList<>();
-        for (int i = 0; i < items.size(); i++) {
-            Object o = items.get(i);
-            if (o instanceof Fish) {
-                Fish fish = (Fish) o;
-                if (!result.contains(fish) && fish.getType() == Val.TYPE_SS) {
-                    resultSS.add(fish);
-                    totalNum += fish.getNum();
-                    if (totalNum >= totalSize) {
-                        break;
-                    }
-                }
-            }
-        }
-        result.addAll(resultSS);
-        if (getFishNum(result) >= totalSize) return result;
-        //S
-        LinkedList<Fish> resultS = new LinkedList<>();
-        for (int i = 0; i < items.size(); i++) {
-            Object o = items.get(i);
-            if (o instanceof Fish) {
-                Fish fish = (Fish) o;
-                if (!result.contains(fish) && fish.getType() == Val.TYPE_S) {
-                    resultS.add(fish);
-                    totalNum += fish.getNum();
-                    if (totalNum >= totalSize) {
-                        break;
-                    }
-                }
-            }
-        }
-        result.addAll(resultS);
+//        LinkedList<Fish> resultSSS = new LinkedList<>();
+//        for (int i = 0; i < items.size(); i++) {
+//            Object o = items.get(i);
+//            if (o instanceof Fish) {
+//                Fish fish = (Fish) o;
+//                if (!result.contains(fish) && fish.getType() == Val.TYPE_SSS) {
+//                    resultSSS.add(fish);
+//                    totalNum += fish.getNum();
+//                    if (totalNum >= totalSize) {
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//        result.addAll(resultSSS);
+//        if (getFishNum(result) >= totalSize) return result;
+//        //SS
+//        LinkedList<Fish> resultSS = new LinkedList<>();
+//        for (int i = 0; i < items.size(); i++) {
+//            Object o = items.get(i);
+//            if (o instanceof Fish) {
+//                Fish fish = (Fish) o;
+//                if (!result.contains(fish) && fish.getType() == Val.TYPE_SS) {
+//                    resultSS.add(fish);
+//                    totalNum += fish.getNum();
+//                    if (totalNum >= totalSize) {
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//        result.addAll(resultSS);
+//        if (getFishNum(result) >= totalSize) return result;
+//        //S
+//        LinkedList<Fish> resultS = new LinkedList<>();
+//        for (int i = 0; i < items.size(); i++) {
+//            Object o = items.get(i);
+//            if (o instanceof Fish) {
+//                Fish fish = (Fish) o;
+//                if (!result.contains(fish) && fish.getType() == Val.TYPE_S) {
+//                    resultS.add(fish);
+//                    totalNum += fish.getNum();
+//                    if (totalNum >= totalSize) {
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//        result.addAll(resultS);
         return result;
     }
 

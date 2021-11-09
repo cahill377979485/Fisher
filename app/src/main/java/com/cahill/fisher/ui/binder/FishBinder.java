@@ -3,6 +3,7 @@ package com.cahill.fisher.ui.binder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import com.cahill.fisher.bean.Fish;
 import com.cahill.fisher.bean.TypeData;
 import com.cahill.fisher.util.TypeDataNames;
 import com.cahill.fisher.util.UIHelper;
+import com.cahill.fisher.util.Val;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -30,21 +32,25 @@ public class FishBinder extends ItemViewBinder<Fish, FishBinder.VH> {
     @Override
     protected void onBindViewHolder(@NonNull VH holder, @NonNull Fish item) {
         UIHelper.setText(holder.tvName, item.getName());
-        UIHelper.setText(holder.tvNum, "拥有：" + item.getNum());
+        UIHelper.setText(holder.tvNum, item.getNum());
         int priority = item.getPriority();
         if (priority == 0) priority = item.getType();
-        UIHelper.setText(holder.tvPriority, "优先级：" + priority);
-        UIHelper.setBackgroundResource(holder.cl, priority > item.getType() ? R.drawable.btn_red_round10 : R.drawable.btn_blue_round10);
+        UIHelper.setText(holder.tvPriority, priority);
+        UIHelper.setImageResource(holder.iv, Val.TYPE_BGS[item.getType()]);
+        UIHelper.setVisibleInvisible(holder.ivFavorite, priority > item.getType());
         UIHelper.setOnClickListener(holder.itemView, v -> EventBus.getDefault().post(new TypeData<>(TypeDataNames.clickFish, item)));
     }
 
     static class VH extends RecyclerView.ViewHolder {
         ConstraintLayout cl;
+        ImageView iv, ivFavorite;
         TextView tvName, tvNum, tvPriority;
 
         public VH(@NonNull View itemView) {
             super(itemView);
             cl = itemView.findViewById(R.id.cl);
+            iv = itemView.findViewById(R.id.iv);
+            ivFavorite = itemView.findViewById(R.id.iv_favorite);
             tvName = itemView.findViewById(R.id.tv);
             tvNum = itemView.findViewById(R.id.tv_num);
             tvPriority = itemView.findViewById(R.id.tv_priority);

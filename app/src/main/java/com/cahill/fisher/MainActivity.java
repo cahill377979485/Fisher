@@ -13,6 +13,8 @@ import com.cahill.fisher.binder.TagBinder;
 import com.cahill.fisher.databinding.ActivityMainBinding;
 import com.cahill.fisher.ui.RelationshipActivity;
 import com.cahill.fisher.ui.ScheduleActivity;
+import com.cahill.fisher.util.Checker;
+import com.cahill.fisher.util.DataUtil;
 
 import me.drakeet.multitype.Items;
 import me.drakeet.multitype.MultiTypeAdapter;
@@ -33,9 +35,12 @@ public class MainActivity extends BaseActivity {
         binding.rv.setLayoutManager(new GridLayoutManager(this, 1));
         binding.rv.setHasFixedSize(true);
         binding.rv.setAdapter(adapter);
+        if (Checker.noList(DataUtil.getAllFish())) {
+            DataUtil.initAllFish();
+        }
         //data
-        items.add(new TagBean("关系", v-> RelationshipActivity.start(this)));
-        items.add(new TagBean("安排", v-> ScheduleActivity.start(this)));
+        items.add(new TagBean("关系", v -> RelationshipActivity.start(this)));
+        items.add(new TagBean("安排", v -> ScheduleActivity.start(this)));
         adapter.notifyDataSetChanged();
     }
 
