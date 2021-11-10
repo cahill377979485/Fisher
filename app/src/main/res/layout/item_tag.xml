@@ -3,16 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/edge"
+    android:paddingEnd="@dimen/edge"
+    android:paddingBottom="@dimen/edge">
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/b180"
+        android:layout_margin="@dimen/edge"
+        android:background="@drawable/btn_blue_round_rect"
+        android:contentDescription="@null"
+        app:layout_constraintDimensionRatio="210:126"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="标签" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:padding="@dimen/b10"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/b40"
+        app:layout_constraintBottom_toBottomOf="@id/iv"
+        app:layout_constraintEnd_toEndOf="@id/iv"
+        app:layout_constraintStart_toStartOf="@id/iv"
+        app:layout_constraintTop_toTopOf="@id/iv"
+        tools:text="书本选择器" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

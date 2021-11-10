@@ -144,28 +144,6 @@ public class ScheduleActivity extends BaseSecondActivity {
     }
 
     /**
-     * 获取父鱼的安排最低限额
-     *
-     * @param fish 目标鱼
-     * @return 所求
-     */
-    private int getParentPairs(Fish fish) {
-        int pairs = 0;
-        if (Checker.notNull(fish)) {
-            List<Fish> listParent = fish.getProducer();
-            if (Checker.hasList(listParent)) {
-                pairs = 99;
-                for (int i = 0; i < listParent.size(); i++) {
-                    Fish f = listParent.get(i);
-                    pairs = Math.min(f.getNum(), pairs);
-                    if (pairs == 0) break;//只要有父鱼空缺，则直接跳出
-                }
-            }
-        }
-        return pairs;
-    }
-
-    /**
      * 算法核心！获取安排的鱼的集合
      *
      * @return 所求
@@ -222,7 +200,7 @@ public class ScheduleActivity extends BaseSecondActivity {
         //找到优先养的SS鱼或S鱼
         for (int i = 0; i < listAllUnit.size(); i++) {
             Fish fish = listAllUnit.get(i);
-            if (fish.getType() == Val.TYPE_SSS) continue;
+            if (fish.getType() == Val.TYPE_SSS) continue;//这里跳过，所以即使SSS是选中状态，也不选中
             if (fish.getPriority() > fish.getType()) {
                 fish.setSelected(true);
                 listAllUnit.get(i).setSelected(true);
@@ -265,10 +243,16 @@ public class ScheduleActivity extends BaseSecondActivity {
         List<Fish> listUnSelected = new ArrayList<>();
         for (int i = 0; i < listAllUnit.size(); i++) {
             Fish fish = listAllUnit.get(i);
-            if (fish.isSelected()) {
-                listSelected.add(fish);
+            if (fish.getType() == Val.TYPE_SSS) {//如果是SSS鱼，选中表示不显示
+                if (fish.getPriority() <= fish.getType()) {
+                    listUnSelected.add(fish);
+                }
             } else {
-                listUnSelected.add(fish);
+                if (fish.isSelected()) {
+                    listSelected.add(fish);
+                } else {
+                    listUnSelected.add(fish);
+                }
             }
         }
         for (int i = 0; i < listSelected.size(); i++) {
@@ -285,7 +269,44 @@ public class ScheduleActivity extends BaseSecondActivity {
             Fish fish = listResult.get(i);
             Log.e("listResult", fish.toString());
         }
-        return listResult.subList(0, 30 * 4);
+        //按照优先级进行排序
+        for (int i = 0; i < listResult.size(); i++) {
+            for (int j = i + 1; j < listResult.size(); j++) {
+                Fish fish = listResult.get(i);
+                Fish nextFish = listResult.get(j);
+                if (fish.getPriority() < nextFish.getPriority()) {
+                    listResult.set(i, nextFish);
+                    listResult.set(j, fish);
+                }
+            }
+        }
+        for (int i = 0; i < listResult.size(); i++) {
+            Fish fish = listResult.get(i);
+            Log.e("排序后listResult", fish.toString());
+        }
+        return listResult;
+    }
+
+    /**
+     * 获取父鱼的安排最低限额
+     *
+     * @param fish 目标鱼
+     * @return 所求
+     */
+    private int getParentPairs(Fish fish) {
+        int pairs = 0;
+        if (Checker.notNull(fish)) {
+            List<Fish> listParent = fish.getProducer();
+            if (Checker.hasList(listParent)) {
+                pairs = 99;
+                for (int i = 0; i < listParent.size(); i++) {
+                    Fish f = listParent.get(i);
+                    pairs = Math.min(f.getNum(), pairs);
+                    if (pairs == 0) break;//只要有父鱼空缺，则直接跳出
+                }
+            }
+        }
+        return pairs;
     }
 
     /**

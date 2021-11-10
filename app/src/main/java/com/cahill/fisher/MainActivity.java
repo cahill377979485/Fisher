@@ -1,7 +1,5 @@
 package com.cahill.fisher;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.os.Bundle;
@@ -9,7 +7,7 @@ import android.view.LayoutInflater;
 
 import com.cahill.fisher.base.BaseActivity;
 import com.cahill.fisher.bean.TagBean;
-import com.cahill.fisher.binder.TagBinder;
+import com.cahill.fisher.ui.binder.TagBinder;
 import com.cahill.fisher.databinding.ActivityMainBinding;
 import com.cahill.fisher.ui.RelationshipActivity;
 import com.cahill.fisher.ui.ScheduleActivity;
@@ -31,8 +29,7 @@ public class MainActivity extends BaseActivity {
         adapter.register(TagBean.class, new TagBinder());
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
-        binding.tv.setText("主页");
-        binding.rv.setLayoutManager(new GridLayoutManager(this, 1));
+        binding.rv.setLayoutManager(new GridLayoutManager(this, 2));
         binding.rv.setHasFixedSize(true);
         binding.rv.setAdapter(adapter);
         if (Checker.noList(DataUtil.getAllFish())) {
