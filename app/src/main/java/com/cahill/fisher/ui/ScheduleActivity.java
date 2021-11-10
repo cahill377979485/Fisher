@@ -111,15 +111,15 @@ public class ScheduleActivity extends BaseSecondActivity {
                             for (int k = 0; k < listGrandParent.size(); k++) {
                                 Fish fishGrandParent = listGrandParent.get(k);
                                 addFish(listSSSType, listSSType, listSType, fishGrandParent);//S
-                                sizeS+=fishGrandParent.getNum();
+                                sizeS += fishGrandParent.getNum();
                             }
                         }
                         addFish(listSSSType, listSSType, listSType, fishParent);//SS
-                        sizeSS+=fishParent.getNum();
+                        sizeSS += fishParent.getNum();
                     }
                 }
                 addFish(listSSSType, listSSType, listSType, fish);//SSS
-                sizeSSS+=fish.getNum();
+                sizeSSS += fish.getNum();
             }
         }
         if (Checker.hasList(items)) {
@@ -143,6 +143,12 @@ public class ScheduleActivity extends BaseSecondActivity {
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * 获取父鱼的安排最低限额
+     *
+     * @param fish 目标鱼
+     * @return 所求
+     */
     private int getParentPairs(Fish fish) {
         int pairs = 0;
         if (Checker.notNull(fish)) {
@@ -160,9 +166,9 @@ public class ScheduleActivity extends BaseSecondActivity {
     }
 
     /**
-     * 有bug：选择SSS鱼之后，后面会重复出现SS鱼。
+     * 算法核心！获取安排的鱼的集合
      *
-     * @return
+     * @return 所求
      */
     private List<Fish> getScheduleFish() {
         if (Checker.noList(items)) {
@@ -279,9 +285,16 @@ public class ScheduleActivity extends BaseSecondActivity {
             Fish fish = listResult.get(i);
             Log.e("listResult", fish.toString());
         }
-        return listResult.subList(0, 40);
+        return listResult.subList(0, 30 * 4);
     }
 
+    /**
+     * 设置最低限额的父鱼状态为选中，例如粉虎鲸的父鱼为银龙鱼和蓝鲨鱼，数量为1和2，则pairs=1；多出的蓝鲨鱼不设置为选中
+     *
+     * @param list       所有鱼的集合
+     * @param targetFish 目标鱼
+     * @param pairs      最低限额
+     */
     private void setPairsParentFishSelected(List<Fish> list, Fish targetFish, int pairs) {
         int n = 0;
         if (Checker.hasList(list)) {
@@ -296,6 +309,13 @@ public class ScheduleActivity extends BaseSecondActivity {
         }
     }
 
+    /**
+     * 集合中是否已存在同名鱼
+     *
+     * @param list       集合
+     * @param targetFish 目标鱼
+     * @return 所求
+     */
     private boolean hasType(List<Fish> list, Fish targetFish) {
         if (Checker.hasList(list)) {
             for (int i = 0; i < list.size(); i++) {
@@ -306,16 +326,6 @@ public class ScheduleActivity extends BaseSecondActivity {
             }
         }
         return false;
-    }
-
-    private int getFishNum(List<Fish> list) {
-        int num = 0;
-        if (Checker.hasList(list)) {
-            for (int i = 0; i < list.size(); i++) {
-                num += list.get(i).getNum();
-            }
-        }
-        return num;
     }
 
     /**
