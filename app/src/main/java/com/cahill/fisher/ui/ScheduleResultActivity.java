@@ -74,16 +74,13 @@ public class ScheduleResultActivity extends BaseSecondActivity {
         int totalNum = 0;
         for (int i = 0; i < listAll.size(); i++) {
             Fish fish = listAll.get(i);
-            int num = fish.getNum();
-            for (int j = 0; j < num; j++) {
-                if (totalNum % 30 == 0) {
-                    items.add(new TitleBean("第" + (n++) + "池"));
-                    adapter.notifyItemInserted(items.size() - 1);
-                }
-                totalNum++;
-                items.add(listAll.get(i));
+            if (totalNum % 30 == 0) {
+                items.add(new TitleBean("第" + (n++) + "池"));
                 adapter.notifyItemInserted(items.size() - 1);
             }
+            totalNum++;
+            items.add(fish);
+            adapter.notifyItemInserted(items.size() - 1);
         }
     }
 }

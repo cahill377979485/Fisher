@@ -3,6 +3,11 @@ package com.cahill.fisher.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
+import com.cahill.fisher.util.Checker;
+import com.cahill.fisher.util.Val;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -12,6 +17,7 @@ import java.util.Objects;
  * @desc
  */
 public class Fish implements Parcelable {
+    private int id;
     private boolean selected;
     private String name;
     private List<Fish> producer;
@@ -20,11 +26,28 @@ public class Fish implements Parcelable {
     private int priority;//优先级
     private boolean required;//是否必选
 
+    public Fish(int id, String name, List<Fish> producer, int num, int type, int priority) {
+        this.id = id;
+        this.name = name;
+        this.producer = producer;
+        this.num = num;
+        this.type = type;
+        this.priority = priority;
+    }
+
     public Fish(String name, List<Fish> producer, int num, int type) {
         this.name = name;
         this.producer = producer;
         this.num = num;
         this.type = type;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public boolean isSelected() {
@@ -83,6 +106,26 @@ public class Fish implements Parcelable {
         this.required = required;
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("id").append("=").append(id).append(";")
+                .append("selected").append("=").append(selected).append(";")
+                .append("name").append("=").append(name).append(";");
+        if (Checker.hasList(producer)) {
+            for (int i = 0; i < producer.size(); i++) {
+                Fish fish = producer.get(i);
+                sb.append("producer").append("=").append(fish.getName()).append(";");
+            }
+        }
+        sb.append("num").append("=").append(num).append(";")
+                .append("type").append("=").append(type == Val.TYPE_SSS ? "SSS" : type == Val.TYPE_SS ? "SS" : "S").append(";")
+                .append("priority").append("=").append(priority).append(";")
+                .append("required").append("=").append(required);
+        return sb.toString();
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -90,6 +133,8 @@ public class Fish implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeByte(this.selected ? (byte) 1 : (byte) 0);
         dest.writeString(this.name);
         dest.writeTypedList(this.producer);
         dest.writeInt(this.num);
@@ -98,7 +143,20 @@ public class Fish implements Parcelable {
         dest.writeByte(this.required ? (byte) 1 : (byte) 0);
     }
 
+    public void readFromParcel(Parcel source) {
+        this.id = source.readInt();
+        this.selected = source.readByte() != 0;
+        this.name = source.readString();
+        this.producer = source.createTypedArrayList(Fish.CREATOR);
+        this.num = source.readInt();
+        this.type = source.readInt();
+        this.priority = source.readInt();
+        this.required = source.readByte() != 0;
+    }
+
     protected Fish(Parcel in) {
+        this.id = in.readInt();
+        this.selected = in.readByte() != 0;
         this.name = in.readString();
         this.producer = in.createTypedArrayList(Fish.CREATOR);
         this.num = in.readInt();
@@ -118,17 +176,4 @@ public class Fish implements Parcelable {
             return new Fish[size];
         }
     };
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Fish fish = (Fish) o;
-        return name.equals(fish.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
 }

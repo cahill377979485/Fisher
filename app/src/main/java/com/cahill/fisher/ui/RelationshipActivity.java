@@ -53,9 +53,6 @@ public class RelationshipActivity extends BaseSecondActivity {
         binding.rv.setLayoutManager(new GridLayoutManager(this, 1));
         binding.rv.setHasFixedSize(true);
         binding.rv.setAdapter(adapter);
-        if (Checker.noList(DataUtil.getAllFish())) {
-            DataUtil.initAllFish();
-        }
         loadData();
     }
 

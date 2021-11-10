@@ -258,6 +258,20 @@ public class DataUtil {
         DataUtil.saveFish(sheShouZuo);
         Fish chuNvZuo = new Fish("处女座", null, 3, Val.TYPE_SSS);
         DataUtil.saveFish(chuNvZuo);
+        checkPriority();
+    }
+
+    public static void checkPriority() {
+        List<Fish> list = getAllFish();
+        if (Checker.hasList(list)) {
+            for (int i = 0; i < list.size(); i++) {
+                Fish fish = list.get(i);
+                if (fish.getPriority() < fish.getType()) {
+                    list.get(i).setPriority(fish.getType());
+                }
+            }
+        }
+        DataUtil.saveAllFish(list);
     }
 
     /**

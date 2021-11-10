@@ -10,7 +10,7 @@
     <string name="commit">提交</string>
     <string name="schedule">安排</string>
     <string name="schedule_desc">点击鱼，调整优先级，然后点击安排即可生成安排表。</string>
-    <string name="schedule_result_desc">第一个池30个格子。第二个池子30个格子。第三个池子28个格子。</string>
+    <string name="schedule_result_desc">每个池子30个格子。</string>
     <string name="schedule_result">安排结果</string>
     <string name="priority">优先级</string>
 </resources>
