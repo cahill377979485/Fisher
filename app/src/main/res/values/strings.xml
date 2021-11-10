@@ -9,8 +9,10 @@
     <string name="can_mutation">可变异</string>
     <string name="commit">提交</string>
     <string name="schedule">安排</string>
-    <string name="schedule_desc">点击鱼进行标记并调整优先级。星座鱼标记后表示不参与安排，其他鱼标记后表示参与安排。</string>
+    <string name="schedule_desc">点击鱼进行标记并调整优先级。</string>
     <string name="schedule_result_desc">每个池子30个格子。</string>
     <string name="schedule_result">安排结果</string>
     <string name="priority">优先级</string>
+    <string name="schedule_with_sss">带星座鱼安排</string>
+    <string name="update">更新数据</string>
 </resources>

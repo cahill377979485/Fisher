@@ -73,7 +73,11 @@ public class ScheduleActivity extends BaseSecondActivity {
         binding.rv.setHasFixedSize(true);
         binding.rv.setAdapter(adapter);
         binding.tv.setOnClickListener(v -> {
-            List<Fish> listScheduleFish = getScheduleFish();
+            List<Fish> listScheduleFish = getScheduleFish(false);
+            ScheduleResultActivity.start(this, new ScheduleFish(listScheduleFish));
+        });
+        binding.tv2.setOnClickListener(v -> {
+            List<Fish> listScheduleFish = getScheduleFish(true);
             ScheduleResultActivity.start(this, new ScheduleFish(listScheduleFish));
         });
         reloadData();
@@ -148,7 +152,7 @@ public class ScheduleActivity extends BaseSecondActivity {
      *
      * @return 所求
      */
-    private List<Fish> getScheduleFish() {
+    private List<Fish> getScheduleFish(boolean showSSS) {
         if (Checker.noList(items)) {
             Toast.makeText(this, "数据错误", Toast.LENGTH_SHORT).show();
             return null;
@@ -200,7 +204,7 @@ public class ScheduleActivity extends BaseSecondActivity {
         //找到优先养的SS鱼或S鱼
         for (int i = 0; i < listAllUnit.size(); i++) {
             Fish fish = listAllUnit.get(i);
-            if (fish.getType() == Val.TYPE_SSS) continue;//这里跳过，所以即使SSS是选中状态，也不选中
+//            if (fish.getType() == Val.TYPE_SSS) continue;//这里跳过，所以即使SSS是选中状态，也不选中
             if (fish.getPriority() > fish.getType()) {
                 fish.setSelected(true);
                 listAllUnit.get(i).setSelected(true);
@@ -243,11 +247,13 @@ public class ScheduleActivity extends BaseSecondActivity {
         List<Fish> listUnSelected = new ArrayList<>();
         for (int i = 0; i < listAllUnit.size(); i++) {
             Fish fish = listAllUnit.get(i);
-            if (fish.getType() == Val.TYPE_SSS) {//如果是SSS鱼，选中表示不显示
-                if (fish.getPriority() <= fish.getType()) {
+            if (showSSS) {
+                if (fish.isSelected()) {
+                    listSelected.add(fish);
+                } else {
                     listUnSelected.add(fish);
                 }
-            } else {
+            } else if (fish.getType() != Val.TYPE_SSS) {
                 if (fish.isSelected()) {
                     listSelected.add(fish);
                 } else {
@@ -255,35 +261,35 @@ public class ScheduleActivity extends BaseSecondActivity {
                 }
             }
         }
-        for (int i = 0; i < listSelected.size(); i++) {
-            Fish fish = listSelected.get(i);
-            Log.e("listSelected", fish.toString());
-        }
+//        for (int i = 0; i < listSelected.size(); i++) {
+//            Fish fish = listSelected.get(i);
+//            Log.e("listSelected", fish.toString());
+//        }
         listResult.addAll(listSelected);
-        for (int i = 0; i < listUnSelected.size(); i++) {
-            Fish fish = listUnSelected.get(i);
-            Log.e("listUnSelected", fish.toString());
-        }
+//        for (int i = 0; i < listUnSelected.size(); i++) {
+//            Fish fish = listUnSelected.get(i);
+//            Log.e("listUnSelected", fish.toString());
+//        }
         listResult.addAll(listUnSelected);
-        for (int i = 0; i < listResult.size(); i++) {
-            Fish fish = listResult.get(i);
-            Log.e("listResult", fish.toString());
-        }
+//        for (int i = 0; i < listResult.size(); i++) {
+//            Fish fish = listResult.get(i);
+//            Log.e("listResult", fish.toString());
+//        }
         //按照优先级进行排序
-        for (int i = 0; i < listResult.size(); i++) {
-            for (int j = i + 1; j < listResult.size(); j++) {
-                Fish fish = listResult.get(i);
-                Fish nextFish = listResult.get(j);
-                if (fish.getPriority() < nextFish.getPriority()) {
-                    listResult.set(i, nextFish);
-                    listResult.set(j, fish);
-                }
-            }
-        }
-        for (int i = 0; i < listResult.size(); i++) {
-            Fish fish = listResult.get(i);
-            Log.e("排序后listResult", fish.toString());
-        }
+//        for (int i = 0; i < listResult.size(); i++) {
+//            Fish fish = listResult.get(i);
+//            for (int j = i + 1; j < listResult.size(); j++) {
+//                Fish nextFish = listResult.get(j);
+//                if (fish.getPriority() < nextFish.getPriority()) {
+//                    listResult.set(i, nextFish);
+//                    listResult.set(j, fish);
+//                }
+//            }
+//        }
+//        for (int i = 0; i < listResult.size(); i++) {
+//            Fish fish = listResult.get(i);
+//            Log.e("排序后listResult", fish.toString());
+//        }
         return listResult;
     }
 

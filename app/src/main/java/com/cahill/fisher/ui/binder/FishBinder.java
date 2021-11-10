@@ -37,13 +37,13 @@ public class FishBinder extends ItemViewBinder<Fish, FishBinder.VH> {
         if (priority == 0) priority = item.getType();
         UIHelper.setText(holder.tvPriority, priority);
         UIHelper.setImageResource(holder.iv, Val.TYPE_BGS[item.getType()]);
-        if (item.getType() == Val.TYPE_SSS) {
+//        if (item.getType() == Val.TYPE_SSS) {
+//            UIHelper.setVisibleInvisible(holder.ivFavorite, priority > item.getType());
+//            UIHelper.setImageResource(holder.ivFavorite, R.mipmap.ic_star_normal);
+//        } else {
             UIHelper.setVisibleInvisible(holder.ivFavorite, priority > item.getType());
-            UIHelper.setImageResource(holder.ivFavorite, R.mipmap.ic_star_normal);
-        } else {
-            UIHelper.setVisibleInvisible(holder.ivFavorite, priority > item.getType());
-            UIHelper.setImageResource(holder.ivFavorite, R.mipmap.ic_star_selected);
-        }
+//            UIHelper.setImageResource(holder.ivFavorite, R.mipmap.ic_star_selected);
+//        }
         UIHelper.setOnClickListener(holder.itemView, v -> EventBus.getDefault().post(new TypeData<>(TypeDataNames.clickFish, item)));
     }
 
