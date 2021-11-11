@@ -43,7 +43,7 @@
         android:background="@drawable/bg_edit"
         android:enabled="false"
         android:imeOptions="actionNext"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/iv_bg"
         app:layout_constraintStart_toStartOf="@id/tv_name"
         app:layout_constraintTop_toBottomOf="@id/tv_name" />
 
@@ -94,9 +94,7 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/btn_height"
         android:layout_marginStart="@dimen/edge"
-        android:layout_marginTop="@dimen/b60"
         android:layout_marginEnd="@dimen/edge"
-        android:layout_marginBottom="@dimen/edge"
         android:background="@drawable/btn_yellow_round"
         android:gravity="center"
         android:paddingBottom="@dimen/b6"
@@ -106,10 +104,10 @@
         android:shadowRadius="1"
         android:text="@string/commit"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/iv_bg"
         app:layout_constraintDimensionRatio="240:90"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_priority" />
+        app:layout_constraintEnd_toEndOf="@id/iv_bg"
+        app:layout_constraintStart_toStartOf="@id/iv_bg"
+        app:layout_constraintTop_toBottomOf="@id/et_priority" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

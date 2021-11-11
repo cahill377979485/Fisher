@@ -13,11 +13,17 @@ import com.cahill.fisher.base.BaseSecondActivity;
 import com.cahill.fisher.bean.Fish;
 import com.cahill.fisher.bean.ScheduleFish;
 import com.cahill.fisher.bean.TitleBean;
+import com.cahill.fisher.bean.TypeData;
 import com.cahill.fisher.databinding.ActivityScheduleResultBinding;
 import com.cahill.fisher.ui.binder.FishBinder;
 import com.cahill.fisher.ui.binder.TitleBinder;
 import com.cahill.fisher.util.Checker;
+import com.cahill.fisher.util.DataUtil;
+import com.cahill.fisher.util.TypeDataNames;
 import com.cahill.fisher.util.Val;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -67,6 +73,9 @@ public class ScheduleResultActivity extends BaseSecondActivity {
         loadData();
     }
 
+    /**
+     * 加载数据
+     */
     private void loadData() {
         List<Fish> listAll = scheduleFish.getList();
         if (Checker.noList(listAll)) return;
@@ -81,6 +90,31 @@ public class ScheduleResultActivity extends BaseSecondActivity {
             totalNum++;
             items.add(fish);
             adapter.notifyItemInserted(items.size() - 1);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void threadHandle(TypeData typeData) {
+        String name = typeData.getName();
+        if (name.equals(TypeDataNames.clickFish)) {
+            Fish bean = (Fish) typeData.getData();
+            if (Checker.isNull(bean)) return;
+            if (Checker.noList(items)) return;
+            for (int i = 0; i < items.size(); i++) {
+                Object o = items.get(i);
+                if (o instanceof Fish) {
+                    Fish fish = (Fish) o;
+                    if (fish.getName().equals(bean.getName())) {
+                        int priority = bean.getPriority();
+                        if (priority == 0) priority = bean.getType();
+                        int newPriority = priority == bean.getType() ? bean.getType() + Val.PRIORITIES.length : bean.getType();
+                        fish.setPriority(newPriority);
+                        DataUtil.saveFish(fish);
+                        adapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
         }
     }
 }

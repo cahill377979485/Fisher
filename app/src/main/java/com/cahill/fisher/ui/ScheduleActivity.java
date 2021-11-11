@@ -47,7 +47,6 @@ public class ScheduleActivity extends BaseSecondActivity {
     private List<Fish> listSSSType;
     private List<Fish> listSSType;
     private List<Fish> listSType;
-    private List<Fish> listAllSSSType;
 
     public static void start(Activity activity) {
         Intent intent = new Intent(activity, ScheduleActivity.class);
@@ -90,7 +89,7 @@ public class ScheduleActivity extends BaseSecondActivity {
         listSSSType = new ArrayList<>();
         listSSType = new ArrayList<>();
         listSType = new ArrayList<>();
-        listAllSSSType = new ArrayList<>();
+        List<Fish> listAllSSSType = new ArrayList<>();
         listAllSSSType.add(DataUtil.getFish("处女座"));
         listAllSSSType.add(DataUtil.getFish("射手座"));
         listAllSSSType.add(DataUtil.getFish("金牛座"));
@@ -201,10 +200,9 @@ public class ScheduleActivity extends BaseSecondActivity {
         LogUtils.e("list.size=" + listAllUnit.size());
         List<Fish> resultPriorityType = new ArrayList<>();
         //先找到优先养的鱼，将其加入，然后将父鱼加入，最后加入祖鱼。之后根据类型，从SSS鱼加起，再加相应的SS鱼，为SSS鱼配等量的最少的SS鱼。比如三种SS鱼其中一种只有一条，则设置三种鱼各一只。
-        //找到优先养的SS鱼或S鱼
+        //找到优先养的鱼
         for (int i = 0; i < listAllUnit.size(); i++) {
             Fish fish = listAllUnit.get(i);
-//            if (fish.getType() == Val.TYPE_SSS) continue;//这里跳过，所以即使SSS是选中状态，也不选中
             if (fish.getPriority() > fish.getType()) {
                 fish.setSelected(true);
                 listAllUnit.get(i).setSelected(true);
@@ -261,35 +259,8 @@ public class ScheduleActivity extends BaseSecondActivity {
                 }
             }
         }
-//        for (int i = 0; i < listSelected.size(); i++) {
-//            Fish fish = listSelected.get(i);
-//            Log.e("listSelected", fish.toString());
-//        }
         listResult.addAll(listSelected);
-//        for (int i = 0; i < listUnSelected.size(); i++) {
-//            Fish fish = listUnSelected.get(i);
-//            Log.e("listUnSelected", fish.toString());
-//        }
         listResult.addAll(listUnSelected);
-//        for (int i = 0; i < listResult.size(); i++) {
-//            Fish fish = listResult.get(i);
-//            Log.e("listResult", fish.toString());
-//        }
-        //按照优先级进行排序
-//        for (int i = 0; i < listResult.size(); i++) {
-//            Fish fish = listResult.get(i);
-//            for (int j = i + 1; j < listResult.size(); j++) {
-//                Fish nextFish = listResult.get(j);
-//                if (fish.getPriority() < nextFish.getPriority()) {
-//                    listResult.set(i, nextFish);
-//                    listResult.set(j, fish);
-//                }
-//            }
-//        }
-//        for (int i = 0; i < listResult.size(); i++) {
-//            Fish fish = listResult.get(i);
-//            Log.e("排序后listResult", fish.toString());
-//        }
         return listResult;
     }
 
@@ -304,7 +275,7 @@ public class ScheduleActivity extends BaseSecondActivity {
         if (Checker.notNull(fish)) {
             List<Fish> listParent = fish.getProducer();
             if (Checker.hasList(listParent)) {
-                pairs = 99;
+                pairs = 120;
                 for (int i = 0; i < listParent.size(); i++) {
                     Fish f = listParent.get(i);
                     pairs = Math.min(f.getNum(), pairs);

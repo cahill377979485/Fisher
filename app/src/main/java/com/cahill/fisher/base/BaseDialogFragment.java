@@ -1,6 +1,11 @@
 package com.cahill.fisher.base;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.cahill.fisher.bean.TypeData;
+import com.cahill.fisher.util.Checker;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -40,6 +46,22 @@ public abstract class BaseDialogFragment extends DialogFragment {
         super.onDestroy();
         if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //设置背景半透明
+        DisplayMetrics dm = new DisplayMetrics();
+        Activity activity = getActivity();
+        if (Checker.notNull(activity)) {
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        }
+        Dialog dialog = getDialog();
+        if (Checker.notNull(dialog)) {
+            dialog.getWindow().setLayout(dm.widthPixels, dialog.getWindow().getAttributes().height);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

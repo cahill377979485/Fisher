@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
 
 import com.cahill.fisher.R;
 import com.cahill.fisher.base.BaseSecondActivity;
@@ -53,6 +54,8 @@ public class RelationshipActivity extends BaseSecondActivity {
         binding.rv.setLayoutManager(new GridLayoutManager(this, 1));
         binding.rv.setHasFixedSize(true);
         binding.rv.setAdapter(adapter);
+        PagerSnapHelper helper = new PagerSnapHelper();
+        helper.attachToRecyclerView(binding.rv);
         loadData();
     }
 
